@@ -1,0 +1,24 @@
+.menu-icon {
+  height: 100%;
+}
+
+.menu-button {
+  height: 100%;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
+
+header {
+  display: flex;
+  height: 4vh;
+  padding: 0.3rem;
+  justify-content: space-between;
+  align-items: center;
+  background-color: #f4f4f4;
+  border-bottom: 1px solid #ddd;
+}
+
+.menu-button:focus {
+  outline: 2px solid #007bff; /* Add focus indicator for accessibility */
+}
