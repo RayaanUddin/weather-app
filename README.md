@@ -1,70 +1,183 @@
-# Getting Started with Create React App
+# Weather Forecast App Documentation
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+## Overview
+This React application fetches weather forecasts and displays weather conditions, a map, and gear recommendations for users. It allows users to view daily and hourly weather forecasts, switch between metric and imperial units, and check running conditions.
 
-## Available Scripts
+## Features
+- Retrieves weather forecast data from OpenWeather API
+- Displays 5-day weather forecast
+- Hourly forecast visualization
+- Provides gear recommendations based on weather conditions
+- Caches data locally for performance improvement
+- Uses Leaflet for map display
+- Supports location retrieval via Geolocation API
+- Sidebar menu for unit selection and location input
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## Project Structure
+### **Components**
+- `SideBar.js`: Sidebar component for selecting location and unit preference.
+- `GearRecommendation.js`: Suggests running gear based on weather conditions.
+- `App.js`: Main component managing state and API calls.
+- `styles/`: Contains CSS files for styling the app.
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+### **State Variables**
+- `isOpen`: Manages sidebar visibility.
+- `forecastData`: Stores weather forecast data.
+- `unit`: Stores selected temperature unit (metric or imperial).
+- `selectedDayIndex`: Tracks the selected day for forecast display.
+- `loading`: Indicates if data is being fetched.
+- `error`: Stores error messages if API call fails.
+- `coords`: Stores latitude and longitude of the selected location.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## Key Functions
+### **Location Handling**
+```js
+const getUserLocation = () => {
+  navigator.geolocation.getCurrentPosition(
+    (position) => {
+      const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
+      localStorage.setItem("coords", JSON.stringify(newCoords));
+      setCoords(newCoords);
+    },
+    () => {
+      localStorage.setItem("coords", JSON.stringify(defaultCoords));
+      setCoords(defaultCoords);
+    }
+  );
+};
+```
+- Retrieves user’s geolocation and stores it in localStorage.
+- Uses default coordinates (London) if geolocation fails.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### **Fetching Weather Data**
+```js
+const fetchWeather = async () => {
+  setLoading(true);
+  setError(null);
+  
+  try {
+    let storedData = JSON.parse(localStorage.getItem("forecastData"));
+    let savedCoords = JSON.parse(localStorage.getItem("coords"));
+    
+    if (storedData && savedCoords && savedCoords.lat === coords.lat && isCacheValid(storedData)) {
+      setForecastData(storedData.data);
+      setLoading(false);
+      return;
+    }
+    
+    const { lat, lon } = coords;
+    const dailyResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast/daily`, {
+      params: { lat, lon, cnt: 5, units: "standard", appid: process.env.REACT_APP_WEATHER_API_KEY },
+    });
+    
+    const hourlyResponse = await axios.get(`https://pro.openweathermap.org/data/2.5/forecast/hourly`, {
+      params: { lat, lon, units: "standard", appid: process.env.REACT_APP_WEATHER_API_KEY },
+    });
+    
+    const hourlyByDay = groupHourlyByDay(hourlyResponse.data.list);
+    dailyResponse.data.list = dailyResponse.data.list.map((day) => {
+      let date = new Date(day.dt * 1000).toISOString().split("T")[0];
+      return { ...day, hourly: hourlyByDay[date] || [] };
+    });
+    
+    localStorage.setItem("forecastData", JSON.stringify({ data: dailyResponse.data, timestamp: new Date().getTime() }));
+    setForecastData(dailyResponse.data);
+  } catch (err) {
+    setError("Could not fetch weather data.");
+  } finally {
+    setLoading(false);
+  }
+};
+```
+- Fetches daily and hourly weather data from OpenWeather API.
+- Caches data in `localStorage` for faster access.
 
-### `npm run build`
+### **Unit Conversion**
+```js
+const getTemperature = (temp, unit, round=false) => {
+  if (unit === "metric") {
+    temp -= 273.15;
+  } else if (unit === "imperial") {
+    temp = (temp - 273.15) * (9/5) + 32;
+  }
+  return round ? Math.round(temp) : temp;
+};
+```
+- Converts temperature from Kelvin to Celsius or Fahrenheit.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### **Running Condition Calculation**
+```js
+const calculateRunningCondition = (temp, wind, precipitation) => {
+  temp = temp - 273.15;
+  if (temp >= 10 && temp <= 20 && wind < 15 && precipitation === 0) {
+    return "good";
+  } else if (temp >= 5 && temp <= 25 && wind < 25 && precipitation < 40) {
+    return "fair";
+  } else {
+    return "poor";
+  }
+};
+```
+- Determines whether the weather is **good**, **fair**, or **poor** for running.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+### **Sidebar Menu Toggle**
+```js
+const toggleMenu = () => setIsOpen(!isOpen);
+```
+- Toggles the sidebar visibility.
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## UI Components
+### **Header**
+```js
+<header>
+  <button onClick={toggleMenu} className="menu-button" aria-label="Open menu">
+    <FontAwesomeIcon icon={faBars} className="menu-icon" />
+  </button>
+</header>
+```
+- Displays a menu button to toggle the sidebar.
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+### **Sidebar**
+```js
+<div className={`sidebar ${isOpen ? "open" : ""}`}>
+  {<SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={toggleMenu} />}
+</div>
+```
+- Contains location selection and unit toggle options.
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### **Weather Data Display**
+```js
+<h1>
+  {selectedDayIndex === 0
+    ? getTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit, true)
+    : getTemperature(forecastData.list[selectedDayIndex].temp.day, unit, true) + " / " +
+      getTemperature(forecastData.list[selectedDayIndex].temp.night, unit, true)}
+  {getUnitSymbol()}
+</h1>
+```
+- Shows temperature for the selected day.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+### **Hourly Forecast**
+```js
+forecastData.list[selectedDayIndex].hourly.map((hour, index) => (
+  <div key={index} className="hour-card">
+    <p>{new Date(hour.dt * 1000).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", hour12: true })}</p>
+    <img src={`http://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} alt="weather icon" />
+    <p>{hour.weather[0].main}</p>
+    <p>{getTemperature(hour.main.temp, unit, true)}{getUnitSymbol()}</p>
+  </div>
+))
+```
+- Displays hourly forecast cards.
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+## Conclusion
+This React weather app provides real-time weather data, caching for efficiency, and gear recommendations for users. The UI is structured using reusable components and styled with CSS. The app is interactive, allowing users to toggle units and select locations dynamically.
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
-
-To learn React, check out the [React documentation](https://reactjs.org/).
-
-### Code Splitting
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
-
-### Analyzing the Bundle Size
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
-
-### Making a Progressive Web App
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
-
-### Advanced Configuration
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
-
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
