@@ -2,7 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./styles/reset.css";
 import "./styles/App.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars } from "@fortawesome/free-solid-svg-icons";
+import { faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
+import SunCalc from "suncalc";
 import SideBar from "./components/SideBar";
 import { MapContainer, TileLayer } from "react-leaflet";
 import axios from "axios";
@@ -12,6 +13,13 @@ const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
 //localStorage.clear();
 
+function isNight(lat, lon) {
+  const now = new Date();
+  const sunTimes = SunCalc.getTimes(now, lat, lon);
+  console.log(sunTimes);
+  return now < sunTimes.sunrise || now > sunTimes.sunset;
+}
+
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [forecastData, setForecastData] = useState(null);
@@ -20,6 +28,7 @@ function App() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [coords, setCoords] = useState(JSON.parse(localStorage.getItem("coords")) || false);
+  const [isNightMode, setIsNightMode] = useState(false);
 
   // Function to get user location
   const getUserLocation = () => {
@@ -109,6 +118,7 @@ function App() {
   // Fetch weather when coords or unit change
   useEffect(() => {
     if (coords) {
+      setIsNightMode(isNight(coords.lat, coords.lon));
       fetchWeather();
     }
   }, [coords, unit]);
@@ -124,7 +134,6 @@ function App() {
     } else if (unit === "imperial") {
       temp = (temp - 273.15) * (9/5) + 32; // Convert Kelvin to Fahrenheit
     }
-
     return round ? Math.round(temp) : temp;
   }
 
@@ -153,14 +162,14 @@ function App() {
   };
 
   return (
-    <div className="App">
+    <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
       <header>
         <button onClick={toggleMenu} className="menu-button" aria-label="Open menu">
-          <FontAwesomeIcon icon={faBars} className="menu-icon" />
+          <FontAwesomeIcon icon={!isOpen ? faBars : faArrowLeft} className="menu-icon"/>
         </button>
       </header>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        {<SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={toggleMenu} />}
+        {<SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={toggleMenu}/>}
       </div>
 
       <div className="grid-container">
@@ -180,26 +189,29 @@ function App() {
                     getTemperature(forecastData.list[selectedDayIndex].temp.night, unit, true)}
                   {getUnitSymbol()}
                 </h1>
-                <img className="weather-icon" src={`http://openweathermap.org/img/wn/${forecastData.list[selectedDayIndex].weather[0].icon}@2x.png`} alt="weather icon" />
+                <img className="weather-icon"
+                     src={`http://openweathermap.org/img/wn/${forecastData.list[selectedDayIndex].weather[0].icon}@2x.png`}
+                     alt="weather icon"/>
                 <p className="weather-desc">{forecastData.list[selectedDayIndex].weather[0].description}</p>
-                <p className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
+                <p
+                  className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
                 <div className="weather-details">
-                  <div className="weather-detail-card">
+                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
                     <span>💨</span>
                     <p>Wind</p>
                     <p>{forecastData.list[selectedDayIndex].speed} km/h</p>
                   </div>
-                  <div className="weather-detail-card">
+                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
                     <span>🌧️</span>
                     <p>Precipitation</p>
                     <p>{forecastData.list[selectedDayIndex].pop * 100}%</p>
                   </div>
-                  <div className="weather-detail-card">
+                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
                     <span>☀️</span>
                     <p>UV Index</p>
                     <p>{forecastData.list[selectedDayIndex].uvi}</p>
                   </div>
-                  <div className="weather-detail-card">
+                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
                     <span>💧</span>
                     <p>Humidity</p>
                     <p>{forecastData.list[selectedDayIndex].humidity}%</p>
@@ -238,18 +250,18 @@ function App() {
               <p>{error}</p>
             ) : (
               forecastData && (
-                <GearRecommendation weatherId={forecastData.list[selectedDayIndex].weather[0].id} />
+                <GearRecommendation weatherId={forecastData.list[selectedDayIndex].weather[0].id}/>
               )
             )
           }
         </div>
 
         <div className="hourly-forecast">
-          <div className="display-day">
-            <h1>{getSelectedDate().toLocaleDateString("en-GB", { weekday: "long" })}</h1>
-            <h2>{getSelectedDate().toLocaleDateString("en-GB", { day: "numeric", month: "short" })}</h2>
+          <div className={`display-day ${isNightMode ? "night-background" : "day-background"}`}>
+            <h1>{getSelectedDate().toLocaleDateString("en-GB", {weekday: "long"})}</h1>
+            <h2>{getSelectedDate().toLocaleDateString("en-GB", {day: "numeric", month: "short"})}</h2>
             <select className="change-day" onChange={changeDay} value={selectedDayIndex}>
-              {Array.from({ length: 5 }).map((_, index) => {
+              {Array.from({length: 5}).map((_, index) => {
                 const date = new Date();
                 date.setDate(date.getDate() + index);
                 return (
@@ -279,7 +291,7 @@ function App() {
                       hour12: true,
                     })}
                   </p>
-                  <img src={`http://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} alt="weather icon" />
+                  <img src={`http://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} alt="weather icon"/>
                   <p>
                     {hour.weather[0].main}
                   </p>
