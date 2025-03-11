@@ -5,7 +5,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import SunCalc from "suncalc";
 import SideBar from "./components/SideBar";
-import { MapContainer, TileLayer } from "react-leaflet";
+import Map from "./components/Map";
 import axios from "axios";
 import GearRecommendation from "./components/GearRecommendation";
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
@@ -13,7 +13,7 @@ const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
 //localStorage.clear();
 
-function isNight(lat, lon) {
+function isNight(lat, lon, date) {
   const now = new Date();
   const sunTimes = SunCalc.getTimes(now, lat, lon);
   console.log(sunTimes);
@@ -238,7 +238,7 @@ function App() {
         </div>
 
         <div className="map-card">
-
+          <Map op = "TA2" lat={coords.lat} lon={coords.lon}/>
         </div>
 
         <div className="gear-card">

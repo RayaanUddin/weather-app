@@ -7,7 +7,8 @@ body {
 }
 
 .night-background {
-  background: linear-gradient(318deg, #13203a, #0b0f17, #000732, #000017, #0000ff);
+  background: linear-gradient(318deg, #1d213a, #313d55,
+  #3b4371, #3c3c65, #2d2d43);
   background-size: 1000% 1000%;
   -webkit-animation: Coolgradient 41s linear infinite;
   -moz-animation: Coolgradient 41s linear infinite;
@@ -17,7 +18,8 @@ body {
 }
 
 .day-background {
-  background: linear-gradient(318deg, #259ad7, #039fc3, #b7c5cc, #00c4ff, #0000ff);
+  background: linear-gradient(318deg, #259ad7, #039fc3,
+  #b7c5cc, #00c4ff, #2c98c6);
   background-size: 1000% 1000%;
   -webkit-animation: Coolgradient 41s linear infinite;
   -moz-animation: Coolgradient 41s linear infinite;
@@ -88,7 +90,7 @@ header {
   width: 80%;
 }
 
-.weather-card, .map-card, .hourly-forecast, .gear-card {
+.weather-card, .map-card, .leaflet-container, .hourly-forecast, .gear-card {
   background: rgba(227, 227, 227, 0.49);
   border-radius: 12px;
   padding: 20px;
@@ -187,8 +189,9 @@ header {
   overflow: hidden;
 }
 
-.map-card {
+.map-card, .leaflet-container {
   height: 30vh;
+  padding: 0;
   grid-column: span 1;
   text-align: center;
 }
