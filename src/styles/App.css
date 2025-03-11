@@ -255,6 +255,7 @@ header {
   border-radius: inherit;
   height: 100%;
   padding: 20px;
+  width: 20%;
   border-top-right-radius: 0;
   border-bottom-right-radius: 0;
 }
