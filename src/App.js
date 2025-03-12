@@ -16,7 +16,6 @@ const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 function isNight(lat, lon, date) {
   const now = new Date();
   const sunTimes = SunCalc.getTimes(now, lat, lon);
-  console.log(sunTimes);
   return now < sunTimes.sunrise || now > sunTimes.sunset;
 }
 
@@ -32,15 +31,31 @@ function App() {
 
   // Function to get user location
   const getUserLocation = () => {
+    console.log("Getting user location...");
+
+    if (!navigator.geolocation) {
+      console.log("Geolocation is not supported by this browser.");
+      localStorage.setItem("coords", JSON.stringify(defaultCoords));
+      setCoords(defaultCoords);
+      return;
+    }
+
     navigator.geolocation.getCurrentPosition(
       (position) => {
         const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
-        localStorage.setItem("coords", JSON.stringify(newCoords));
+
         setCoords(newCoords);
+        localStorage.setItem("coords", JSON.stringify(newCoords));
       },
-      () => {
+      (error) => {
+        console.warn(`Error getting user location: ${error.message}`);
         localStorage.setItem("coords", JSON.stringify(defaultCoords));
         setCoords(defaultCoords);
+      },
+      {
+        enableHighAccuracy: true, // Request high-accuracy location if possible
+        timeout: 10000, // 10 seconds timeout
+        maximumAge: 600000 // Accept cached location data up to 10 minutes old
       }
     );
   };
@@ -55,6 +70,10 @@ function App() {
   const fetchWeather = async () => {
     setLoading(true);
     setError(null);
+
+    if (!coords) {
+      return;
+    }
 
     try {
       let storedData = JSON.parse(localStorage.getItem("forecastData"));
@@ -111,6 +130,7 @@ function App() {
   // Get coordinates on initial load
   useEffect(() => {
     if (!coords) {
+      console.log("No coordinates found in local storage. Getting user location...");
       getUserLocation();
     }
   }, []);
@@ -238,7 +258,15 @@ function App() {
         </div>
 
         <div className="map-card">
-          <Map op = "TA2" lat={coords.lat} lon={coords.lon}/>
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            forecastData && (
+              <Map op = "TA2" lat={coords.lat} lon={coords.lon}/>
+            )
+          )}
         </div>
 
         <div className="gear-card">
