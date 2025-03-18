@@ -1,0 +1,15 @@
+.location-weather {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 3fr 1fr;
+    img {
+        grid-column: span 1;
+        grid-row: span 3;
+        height: 100%;
+    }
+    .desc {
+        grid-column: span 1;
+        font-size: 1rem;
+        color: inherit;
+    }
+}

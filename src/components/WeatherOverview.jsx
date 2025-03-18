@@ -16,8 +16,7 @@ const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) =>
            src={`http://openweathermap.org/img/wn/${forecastData.list[selectedDayIndex].weather[0].icon}@2x.png`}
            alt="weather icon"/>
       <p className="weather-desc">{forecastData.list[selectedDayIndex].weather[0].description}</p>
-      <p
-        className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
+      <p className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
       <div className="weather-details">
         <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
           <span>💨</span>
