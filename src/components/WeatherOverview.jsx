@@ -43,11 +43,7 @@ const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) =>
         Running Condition:
         {
           (() => {
-            let temp = forecastData.list[selectedDayIndex].temp.day;
-            if (selectedDayIndex === 0) {
-              temp = forecastData.list[selectedDayIndex].hourly[0].main.temp;
-            }
-            const runningCondition = calculateRunningCondition(temp, forecastData.list[selectedDayIndex].speed, forecastData.list[selectedDayIndex].pop);
+            const runningCondition = calculateRunningCondition(forecastData.list[selectedDayIndex].feels_like.day, forecastData.list[selectedDayIndex].speed, forecastData.list[selectedDayIndex].pop);
             return (
               <span className={runningCondition + " upper"}>{runningCondition}</span>
             );
