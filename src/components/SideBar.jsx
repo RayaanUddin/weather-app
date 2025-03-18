@@ -92,10 +92,10 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
           />
           <button onClick={handleLocationSearch}>Search</button>
           <h4>Previous Searches</h4>
-          <div>
+          <div className="previous-locations">
             {searchHistory.map((location, index) => (
               forecasts[location]?
-                <LocationWeather forecast={forecasts[location]} unit={unit} onClick={() => handleHistorySearch(location)}/>
+                <LocationWeather forecast={forecasts[location]} key={index} unit={unit} onClick={() => handleHistorySearch(location)}/>
                 : <button key={index} onClick={() => handleHistorySearch(location)}>loading...</button>
             ))}
           </div>

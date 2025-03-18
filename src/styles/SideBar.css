@@ -52,6 +52,23 @@ h2 {
     z-index: 0;
 }
 
+.previous-locations {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.location-search {
+    display: flex;
+    gap: 10px;
+    flex-direction: column;
+    color: white;
+}
+
+.location-search input {
+    color: inherit;
+}
+
 .location-input {
     width: 100%;
     padding: 12px;
