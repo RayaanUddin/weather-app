@@ -1,60 +1,58 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "../styles/SideBar.css";
-import axios from "axios";
+import "../api/location"
+import {locationCoords} from "../api/location";
 
 const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
   const [inputLocation, setInputLocation] = useState("");
+  const [selectedRoute, setSelectedRoute] = useState(null);
+  const [showChangeLocation, setShowChangeLocation] = useState(false);
+  const [searchHistory, setSearchHistory] = useState([]);
 
-  const handleLocationChange = (event) => {
-    setInputLocation(event.target.value);
-  };
+  useEffect(() => {
+    const storedLocations = JSON.parse(localStorage.getItem("searchHistory")) || [];
+    setSearchHistory(storedLocations);
+  }, []);
 
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-
-    if (!inputLocation.trim()) return;
-
-    try {
-      const response = await axios.get("https://api.openweathermap.org/geo/1.0/direct", {
-        params: { q: inputLocation, limit: 1, appid: process.env.REACT_APP_WEATHER_API_KEY },
+  const handleLocationSearch = () => {
+    if (inputLocation.trim() !== "") {
+      locationCoords(inputLocation).then(([success, coords]) => {
+        if (success) {
+          setCoords(coords);
+          toggleMenu();
+          // Temporarily Needs refining
+          const updatedHistory = [inputLocation, ...searchHistory].slice(0, 5);
+          setSearchHistory(updatedHistory);
+          localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
+        } else {
+          console.error("Geocoding error:", inputLocation);
+        }
       });
-      if (response.data.length === 0) {
-        console.error("No results found for location:", inputLocation);
-        return;
-      }
-
-      const { lat, lon } = response.data[0];
-      const newCoords = { lat: lat, lon: lon };
-      setCoords(newCoords);
-      toggleMenu();
-    } catch (error) {
-      console.error("Geocoding error:", error);
     }
   };
 
-  const toggleUnit = () => {
-    const newUnit = unit === "metric" ? "imperial" : "metric";
-    setUnit(newUnit);
-    localStorage.setItem("unit", newUnit);
-    toggleMenu(); // Close the sidebar after selection
-  };
-
   return (
-    <div className="sidebar-content">
-      <h2>Settings</h2>
-      <form onSubmit={handleSubmit} className="location-form">
-        <input
-          type="text"
-          value={inputLocation}
-          onChange={handleLocationChange}
-          placeholder="Enter new location"
-          className="location-input"
-        />
-        <button type="submit" className="submit-button">Set Location</button>
-      </form>
-      <button onClick={toggleUnit} className="unit-toggle-button">
-        Switch to {unit === "metric" ? "Fahrenheit (°F)" : "Celsius (°C)"}
-      </button>
+    <div className="container">
+      <button onClick={() => setShowChangeLocation(!showChangeLocation)}>Change Location</button>
+      {showChangeLocation && (
+        <div className="location-search">
+          <input
+            type="text"
+            value={inputLocation}
+            onChange={(e) => setInputLocation(e.target.value)}
+            placeholder="Enter location"
+          />
+          <button onClick={handleLocationSearch}>Search</button>
+          <h4>Previous Searches</h4>
+          <ul>
+            {searchHistory.map((location, index) => (
+              <li key={index}>{location}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+      <button>Select a Route</button>
+      <button>Settings</button>
     </div>
   );
 };
