@@ -6,12 +6,14 @@ import { faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import SunCalc from "suncalc";
 import SideBar from "./components/SideBar";
 import Map from "./components/Map";
-import axios from "axios";
 import GearRecommendation from "./components/GearRecommendation";
+import {weatherData} from "./utils/weatherUtil"
+import * as unitConversion from "./utils/unitConversion";
+import {getCurrentCoords} from "./utils/getCurrentCoords";
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
-//localStorage.clear();
+localStorage.clear();
 
 function isNight(lat, lon, date) {
   const now = new Date();
@@ -22,43 +24,16 @@ function isNight(lat, lon, date) {
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [forecastData, setForecastData] = useState(null);
-  const [unit, setUnit] = useState(localStorage.getItem("unit") || "metric");
+  const [unit, setUnit] = useState(
+    Object.values(unitConversion.UnitType).includes(localStorage.getItem("unit")) ? localStorage.getItem("unit") : unitConversion.UnitType.METRIC
+  );
   const [selectedDayIndex, setSelectedDayIndex] = useState(0);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
-  const [coords, setCoords] = useState(JSON.parse(localStorage.getItem("coords")) || false);
+  const [coords, setCoords] = useState(
+    JSON.parse(localStorage.getItem("coords")) || false
+  );
   const [isNightMode, setIsNightMode] = useState(false);
-
-  // Function to get user location
-  const getUserLocation = () => {
-    console.log("Getting user location...");
-
-    if (!navigator.geolocation) {
-      console.log("Geolocation is not supported by this browser.");
-      localStorage.setItem("coords", JSON.stringify(defaultCoords));
-      setCoords(defaultCoords);
-      return;
-    }
-
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const newCoords = { lat: position.coords.latitude, lon: position.coords.longitude };
-
-        setCoords(newCoords);
-        localStorage.setItem("coords", JSON.stringify(newCoords));
-      },
-      (error) => {
-        console.warn(`Error getting user location: ${error.message}`);
-        localStorage.setItem("coords", JSON.stringify(defaultCoords));
-        setCoords(defaultCoords);
-      },
-      {
-        enableHighAccuracy: true, // Request high-accuracy location if possible
-        timeout: 10000, // 10 seconds timeout
-        maximumAge: 600000 // Accept cached location data up to 10 minutes old
-      }
-    );
-  };
 
   const isCacheValid = (storedData) => {
     if (!storedData) return false;
@@ -67,71 +42,19 @@ function App() {
     return now - timestamp < CACHE_EXPIRY_HOURS * 60 * 60 * 1000; // Check if cache is still valid
   };
 
-  const fetchWeather = async () => {
-    setLoading(true);
-    setError(null);
-
-    if (!coords) {
-      return;
-    }
-
-    try {
-      let storedData = JSON.parse(localStorage.getItem("forecastData"));
-      let savedCoords = JSON.parse(localStorage.getItem("coords"));
-
-      if (storedData && savedCoords && savedCoords.lat === coords.lat && savedCoords.lon === coords.lon && isCacheValid(storedData)) {
-        console.log("Using cached weather data.");
-        setForecastData(storedData.data);
-        setLoading(false);
-        return;
-      }
-
-      console.log("Fetching new weather data...");
-
-      const { lat, lon } = coords;
-
-      const dailyResponse = await axios.get(`https://api.openweathermap.org/data/2.5/forecast/daily`, {
-        params: { lat, lon, cnt: 5, units: "standard", appid: process.env.REACT_APP_WEATHER_API_KEY },
-      });
-
-      const hourlyResponse = await axios.get(`https://pro.openweathermap.org/data/2.5/forecast/hourly`, {
-        params: { lat, lon, units: "standard", appid: process.env.REACT_APP_WEATHER_API_KEY },
-      });
-
-      const groupHourlyByDay = (hourlyData) => {
-        return hourlyData.reduce((acc, hour) => {
-          let date = new Date(hour.dt * 1000).toISOString().split("T")[0];
-          if (!acc[date]) acc[date] = [];
-          acc[date].push(hour);
-          return acc;
-        }, {});
-      };
-
-      const hourlyByDay = groupHourlyByDay(hourlyResponse.data.list);
-
-      dailyResponse.data.list = dailyResponse.data.list.map((day) => {
-        let date = new Date(day.dt * 1000).toISOString().split("T")[0];
-        return { ...day, hourly: hourlyByDay[date] || [] };
-      });
-
-      const newForecastData = { data: dailyResponse.data, timestamp: new Date().getTime() };
-
-      localStorage.setItem("forecastData", JSON.stringify(newForecastData));
-      localStorage.setItem("coords", JSON.stringify(coords));
-
-      setForecastData(dailyResponse.data);
-    } catch (err) {
-      setError("Could not fetch weather data.");
-    } finally {
-      setLoading(false);
-    }
-  };
-
   // Get coordinates on initial load
   useEffect(() => {
     if (!coords) {
       console.log("No coordinates found in local storage. Getting user location...");
-      getUserLocation();
+      getCurrentCoords().then(coords => {
+        if (coords) {
+          setCoords(coords);
+          localStorage.setItem("coords", JSON.stringify(coords));
+        } else {
+          setCoords(defaultCoords);
+          localStorage.setItem("coords", JSON.stringify(defaultCoords));
+        }
+      })
     }
   }, []);
 
@@ -139,22 +62,33 @@ function App() {
   useEffect(() => {
     if (coords) {
       setIsNightMode(isNight(coords.lat, coords.lon));
-      fetchWeather();
+      setLoading(true);
+      setError(null);
+      let storedData = JSON.parse(localStorage.getItem("forecastData"));
+      let savedCoords = JSON.parse(localStorage.getItem("coords"));
+      console.log(storedData);
+      if (storedData && storedData.data && storedData.data.cod === "200" && savedCoords && savedCoords.lat === coords.lat && savedCoords.lon === coords.lon && isCacheValid(storedData)) {
+        console.log("Using cached weather data.");
+        setForecastData(storedData.data);
+        setLoading(false);
+      } else {
+        console.log("Fetching new weather data...");
+        weatherData(coords).then((data) => {
+          setForecastData(data);
+          setLoading(false);
+          localStorage.setItem("forecastData", JSON.stringify({ data: data, timestamp: new Date().getTime() }));
+          localStorage.setItem("coords", JSON.stringify(coords));
+        }).catch((err) => {
+          setError("Could not fetch weather data. Please try again later.");
+          setLoading(false);
+        });
+      }
     }
+    console.log(forecastData);
   }, [coords, unit]);
 
   const getUnitSymbol = () => {
     return unit === "metric" ? "°C" : "°F";
-  }
-
-  // Originally in Kelvin, convert to Celsius or Fahrenheit or leave as is
-  const getTemperature = (temp, unit, round=false) => {
-    if (unit === "metric") {
-      temp -= 273.15; // Convert Kelvin to Celsius
-    } else if (unit === "imperial") {
-      temp = (temp - 273.15) * (9/5) + 32; // Convert Kelvin to Fahrenheit
-    }
-    return round ? Math.round(temp) : temp;
   }
 
   const calculateRunningCondition = (temp, wind, precipitation) => {
@@ -189,7 +123,7 @@ function App() {
         </button>
       </header>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        {<SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={toggleMenu}/>}
+        <SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={toggleMenu}/>
       </div>
 
       <div className="grid-container">
@@ -203,10 +137,10 @@ function App() {
               <>
                 <h1>
                   {selectedDayIndex === 0
-                    ? getTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit, true)
-                    : getTemperature(forecastData.list[selectedDayIndex].temp.day, unit, true) +
+                    ? Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit))
+                    : Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.day, unit)) +
                     " / " +
-                    getTemperature(forecastData.list[selectedDayIndex].temp.night, unit, true)}
+                    Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.night, unit))}
                   {getUnitSymbol()}
                 </h1>
                 <img className="weather-icon"
@@ -324,7 +258,7 @@ function App() {
                     {hour.weather[0].main}
                   </p>
                   <p>
-                    {getTemperature(hour.main.temp, unit, true)}{getUnitSymbol()}
+                    {Math.round(unitConversion.convertTemperature(hour.main.temp, unit, true))}{getUnitSymbol()}
                   </p>
                 </div>
               ))

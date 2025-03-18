@@ -3,10 +3,12 @@ import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import {faCog} from "@fortawesome/free-solid-svg-icons";
 import L from "leaflet";
+import "../api/map.js";
 import "../styles/Map.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {getLayerAPI, getWeatherLayers} from "../api/map";
 
 const customMarker = new L.Icon({
   iconUrl: markerIconPng,
@@ -15,14 +17,6 @@ const customMarker = new L.Icon({
   iconAnchor: [12, 41], // Center bottom
   popupAnchor: [1, -34], // Popup positioning
 });
-
-const weatherLayers = {
-  Clouds: "CL",
-  Precipitation: "PA0",
-  Temperature: "TA2",
-  Wind: "WND",
-  Humidity: "HRD0",
-};
 
 const Map = ({ lat, lon }) => {
   const [selectedLayers, setSelectedLayers] = useState([]);
@@ -45,7 +39,7 @@ const Map = ({ lat, lon }) => {
       {showSettings && (
         <div className="settings-panel">
           <h3>Weather Layers</h3>
-          {Object.entries(weatherLayers).map(([name, key]) => (
+          {Object.entries(getWeatherLayers()).map(([name, key]) => (
             <label key={key}>
               <input
                 type="checkbox"
@@ -65,7 +59,7 @@ const Map = ({ lat, lon }) => {
         {selectedLayers.map((layer) => (
           <TileLayer
             key={layer}
-            url={`http://maps.openweathermap.org/maps/2.0/weather/${layer}/{z}/{x}/{y}?appid=${process.env.REACT_APP_WEATHER_API_KEY}&fill_bound=true&opacity=0.6`}
+            url={getLayerAPI(layer)}
           />
         ))}
 
