@@ -21,6 +21,15 @@ export const convertTemperature = (temp:number, unit:UnitType):number => {
 }
 
 /**
+ * Get temperature unit by Unit Type
+ * @param {UnitType} unit
+ * @return {string}
+ */
+export const getUnitSymbol_Temperature = (unit:UnitType) => {
+  return unit === UnitType.METRIC ? "°C" : "°F";
+}
+
+/**
  * Convert wind speed from m/s to km/h or mph
  * @param {number} speed Wind speed in m/s
  * @param {UnitType} unit Unit type

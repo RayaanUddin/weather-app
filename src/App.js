@@ -7,13 +7,14 @@ import SunCalc from "suncalc";
 import SideBar from "./components/SideBar";
 import Map from "./components/Map";
 import GearRecommendation from "./components/GearRecommendation";
+import WeatherOverview from "./components/WeatherOverview";
 import {weatherData} from "./utils/weatherUtil"
 import * as unitConversion from "./utils/unitConversion";
 import {getCurrentCoords} from "./utils/getCurrentCoords";
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
-localStorage.clear();
+// localStorage.clear();
 
 function isNight(lat, lon, date) {
   const now = new Date();
@@ -87,22 +88,6 @@ function App() {
     console.log(forecastData);
   }, [coords, unit]);
 
-  const getUnitSymbol = () => {
-    return unit === "metric" ? "°C" : "°F";
-  }
-
-  const calculateRunningCondition = (temp, wind, precipitation) => {
-    temp = temp - 273.15; // Convert Kelvin to °C (Easy to understand)
-
-    if (temp >= 10 && temp <= 20 && wind < 15 && precipitation === 0) {
-      return "good";
-    } else if (temp >= 5 && temp <= 25 && wind < 25 && precipitation < 40) {
-      return "fair";
-    } else {
-      return "poor";
-    }
-  };
-
   const getSelectedDate = () => {
     let nextDay = new Date();
     nextDay.setDate(new Date().getDate() + selectedDayIndex);
@@ -134,59 +119,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <>
-                <h1>
-                  {selectedDayIndex === 0
-                    ? Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit))
-                    : Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.day, unit)) +
-                    " / " +
-                    Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.night, unit))}
-                  {getUnitSymbol()}
-                </h1>
-                <img className="weather-icon"
-                     src={`http://openweathermap.org/img/wn/${forecastData.list[selectedDayIndex].weather[0].icon}@2x.png`}
-                     alt="weather icon"/>
-                <p className="weather-desc">{forecastData.list[selectedDayIndex].weather[0].description}</p>
-                <p
-                  className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
-                <div className="weather-details">
-                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-                    <span>💨</span>
-                    <p>Wind</p>
-                    <p>{forecastData.list[selectedDayIndex].speed} km/h</p>
-                  </div>
-                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-                    <span>🌧️</span>
-                    <p>Precipitation</p>
-                    <p>{forecastData.list[selectedDayIndex].pop * 100}%</p>
-                  </div>
-                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-                    <span>☀️</span>
-                    <p>UV Index</p>
-                    <p>{forecastData.list[selectedDayIndex].uvi}</p>
-                  </div>
-                  <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-                    <span>💧</span>
-                    <p>Humidity</p>
-                    <p>{forecastData.list[selectedDayIndex].humidity}%</p>
-                  </div>
-                </div>
-                <p className="condition">
-                  Running Condition:
-                  {
-                    (() => {
-                      let temp = forecastData.list[selectedDayIndex].temp.day;
-                      if (selectedDayIndex === 0) {
-                        temp = forecastData.list[selectedDayIndex].hourly[0].main.temp;
-                      }
-                      const runningCondition = calculateRunningCondition(temp, forecastData.list[selectedDayIndex].speed, forecastData.list[selectedDayIndex].pop);
-                      return (
-                        <span className={runningCondition + " upper"}>{runningCondition}</span>
-                      );
-                    })()
-                  }
-                </p>
-              </>
+              <WeatherOverview forecastData={forecastData} selectedDayIndex={selectedDayIndex} unit={unit} isNightMode={isNightMode}/>
             )
           )}
         </div>
@@ -258,7 +191,7 @@ function App() {
                     {hour.weather[0].main}
                   </p>
                   <p>
-                    {Math.round(unitConversion.convertTemperature(hour.main.temp, unit, true))}{getUnitSymbol()}
+                    {Math.round(unitConversion.convertTemperature(hour.main.temp, unit, true))}{unitConversion.getUnitSymbol_Temperature(unit)}
                   </p>
                 </div>
               ))
