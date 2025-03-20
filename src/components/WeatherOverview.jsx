@@ -1,9 +1,11 @@
 import * as unitConversion from "../utils/unitConversion";
 import {calculateRunningCondition} from "../utils/weatherUtil";
+import "../styles/WeatherOverview.css";
+import {getUnitSymbol_Speed} from "../utils/unitConversion";
 
 const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) => {
   return (
-    <>
+    <div className="weather-overview">
       <h1>
         {selectedDayIndex === 0
           ? Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit))
@@ -12,29 +14,29 @@ const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) =>
           Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.night, unit))}
         {unitConversion.getUnitSymbol_Temperature(unit)}
       </h1>
-      <img className="weather-icon"
-           src={`http://openweathermap.org/img/wn/${forecastData.list[selectedDayIndex].weather[0].icon}@2x.png`}
+      <img className="icon"
+           src={require(`../assets/weather-icons/${forecastData.list[selectedDayIndex].weather[0].icon}.png`)}
            alt="weather icon"/>
-      <p className="weather-desc">{forecastData.list[selectedDayIndex].weather[0].description}</p>
+      <p className="desc">{forecastData.list[selectedDayIndex].weather[0].description}</p>
       <p className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
-      <div className="weather-details">
-        <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-          <span>💨</span>
+      <div className="metrics">
+        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
+          <img src={require("../assets/metric-icons/wind.png")} alt="icon" />
           <p>Wind</p>
-          <p>{forecastData.list[selectedDayIndex].speed} km/h</p>
+          <p>{Math.round(unitConversion.convertSpeed(forecastData.list[selectedDayIndex].speed, unit)*100)/100+" "+unitConversion.getUnitSymbol_Speed(unit)}</p>
         </div>
-        <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-          <span>🌧️</span>
+        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
+          <img src={require("../assets/metric-icons/precipitation.png")} alt="icon" />
           <p>Precipitation</p>
           <p>{forecastData.list[selectedDayIndex].pop * 100}%</p>
         </div>
-        <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-          <span>☀️</span>
-          <p>UV Index</p>
-          <p>{forecastData.list[selectedDayIndex].uvi}</p>
+        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
+          <img src={require("../assets/metric-icons/pressure.png")} alt="icon" />
+          <p>Pressure</p>
+          <p>{forecastData.list[selectedDayIndex].pressure}</p>
         </div>
-        <div className={`weather-detail-card ${isNightMode ? "night-background" : "day-background"}`}>
-          <span>💧</span>
+        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
+          <img src={require("../assets/metric-icons/humidity.png")} alt="icon" />
           <p>Humidity</p>
           <p>{forecastData.list[selectedDayIndex].humidity}%</p>
         </div>
@@ -50,7 +52,7 @@ const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) =>
           })()
         }
       </p>
-    </>
+    </div>
   );
 }
 

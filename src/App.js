@@ -59,7 +59,7 @@ function App() {
     }
   }, []);
 
-  // Fetch weather when coords or unit change
+  // Fetch weather when coords change
   useEffect(() => {
     if (coords) {
       setIsNightMode(isNight(coords.lat, coords.lon));
@@ -86,7 +86,7 @@ function App() {
       }
     }
     console.log(forecastData);
-  }, [coords, unit]);
+  }, [coords]);
 
   const getSelectedDate = () => {
     let nextDay = new Date();
@@ -179,14 +179,14 @@ function App() {
             ) : forecastData && (
               forecastData.list[selectedDayIndex].hourly.map((hour, index) => (
                 <div key={index} className="hour-card">
-                  <p>
+                  <p className={"time"}>
                     {new Date(hour.dt * 1000).toLocaleTimeString([], {
                       hour: "2-digit",
                       minute: "2-digit",
                       hour12: true,
                     })}
                   </p>
-                  <img src={`http://openweathermap.org/img/wn/${hour.weather[0].icon}.png`} alt="weather icon"/>
+                  <img src={require(`./assets/weather-icons/${hour.weather[0].icon}.png`)} alt="weather icon"/>
                   <p>
                     {hour.weather[0].main}
                   </p>

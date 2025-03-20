@@ -30,12 +30,21 @@ export const getUnitSymbol_Temperature = (unit:UnitType) => {
 }
 
 /**
- * Convert wind speed from m/s to km/h or mph
+ * Get speed unit by Unit Type
+ * @param {UnitType} unit
+ * @return {string}
+ */
+export const getUnitSymbol_Speed = (unit:UnitType) => {
+  return unit === UnitType.METRIC ? "km/h" : "mph";
+}
+
+/**
+ * Convert speed from m/s to km/h or mph
  * @param {number} speed Wind speed in m/s
  * @param {UnitType} unit Unit type
  * @returns {number} Converted wind speed
  */
-export const convertWindSpeed = (speed:number, unit:UnitType):number => {
+export const convertSpeed = (speed:number, unit:UnitType):number => {
   if (unit === UnitType.METRIC) {
     return speed * 3.6;
   } else if (unit === UnitType.IMPERIAL) {
