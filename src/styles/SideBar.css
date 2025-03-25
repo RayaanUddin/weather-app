@@ -3,7 +3,7 @@
     top: 0;
     left: 0;
     padding: 10vh 20px 20px 20px;
-    width: 30vw;
+    width: 100%;
     height: 100vh;
     overflow-y: auto;
     background: rgba(30, 30, 30, 0.9);
@@ -105,8 +105,9 @@ h2 {
     box-shadow: 0 4px 10px rgba(255, 217, 61, 0.4);
 }
 
-@media screen and (max-width: 768px) {
+/* Media queries for desktop */
+@media screen and (min-width: 600px) {
     .sidebar {
-        width: 80%; /* Adjust width for mobile */
+        width: 40vw;
     }
 }
