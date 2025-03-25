@@ -54,10 +54,14 @@ body {
   gap: 10px;
   width: 100vw;
   min-height: 100vh;
+  padding-top: 4vh;
 }
 
 header {
+  position: fixed;
+  top: 0;
   display: flex;
+  width: 100%;
   justify-content: start;
   padding: 10px;
   height: 4vh;
