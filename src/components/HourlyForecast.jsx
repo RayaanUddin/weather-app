@@ -37,7 +37,7 @@ const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNigh
             <div key={index} className="hour-card">
               <p className={"time"}>
                 {new Date(hour.dt * 1000).toLocaleTimeString([], {
-                  hour: "2-digit",
+                  hour: "2-digit", minute: "2-digit"
                 })}
               </p>
               <img src={require(`../assets/weather-icons/${hour.weather[0].icon}.png`)} alt="weather icon"/>

@@ -9,9 +9,15 @@ const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) =>
       <h1>
         {selectedDayIndex === 0
           ? Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit))
-          : Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.day, unit)) +
-          " / " +
-          Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.night, unit))}
+          : (
+            <>
+              {Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.day, unit))}
+              <sup style={{ fontSize: "0.5em" }}>
+                {"/"+Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.night, unit))}
+              </sup>
+            </>
+          )
+        }
         {unitConversion.getUnitSymbol_Temperature(unit)}
       </h1>
       <img className="icon"
