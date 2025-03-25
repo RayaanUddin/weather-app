@@ -8,13 +8,14 @@ import SideBar from "./components/SideBar";
 import Map from "./components/Map";
 import GearRecommendation from "./components/GearRecommendation";
 import WeatherOverview from "./components/WeatherOverview";
-import {weatherData} from "./utils/weatherUtil"
+import HourlyForecast from "./components/HourlyForecast";
+import { weatherData } from "./utils/weatherUtil";
 import * as unitConversion from "./utils/unitConversion";
-import {getCurrentCoords} from "./utils/getCurrentCoords";
+import { getCurrentCoords } from "./utils/getCurrentCoords";
+import Header from "./components/Header";
+
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
-
-// localStorage.clear();
 
 function isNight(lat, lon, date) {
   const now = new Date();
@@ -23,7 +24,6 @@ function isNight(lat, lon, date) {
 }
 
 function App() {
-  const [isOpen, setIsOpen] = useState(false);
   const [forecastData, setForecastData] = useState(null);
   const [unit, setUnit] = useState(
     Object.values(unitConversion.UnitType).includes(localStorage.getItem("unit")) ? localStorage.getItem("unit") : unitConversion.UnitType.METRIC
@@ -35,6 +35,7 @@ function App() {
     JSON.parse(localStorage.getItem("coords")) || false
   );
   const [isNightMode, setIsNightMode] = useState(false);
+  const [isOpen, setIsOpen] = useState(false);
 
   const isCacheValid = (storedData) => {
     if (!storedData) return false;
@@ -88,29 +89,12 @@ function App() {
     console.log(forecastData);
   }, [coords]);
 
-  const getSelectedDate = () => {
-    let nextDay = new Date();
-    nextDay.setDate(new Date().getDate() + selectedDayIndex);
-    return nextDay;
-  };
-
-  const toggleMenu = () => setIsOpen(!isOpen);
-
-  const changeDay = (event) => {
-    setSelectedDayIndex(parseInt(event.target.value));
-  };
-
   return (
     <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
-      <header>
-        <button onClick={toggleMenu} className="menu-button" aria-label="Open menu">
-          <FontAwesomeIcon icon={!isOpen ? faBars : faArrowLeft} className="menu-icon"/>
-        </button>
-      </header>
+      <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} />
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        <SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={toggleMenu}/>
+        <SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} />
       </div>
-
       <div className="grid-container">
         <div className="weather-card">
           {loading ? (
@@ -119,7 +103,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <WeatherOverview forecastData={forecastData} selectedDayIndex={selectedDayIndex} unit={unit} isNightMode={isNightMode}/>
+              <WeatherOverview forecastData={forecastData} selectedDayIndex={selectedDayIndex} unit={unit} isNightMode={isNightMode} />
             )
           )}
         </div>
@@ -131,7 +115,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <Map op = "TA2" lat={coords.lat} lon={coords.lon}/>
+              <Map op="TA2" lat={coords.lat} lon={coords.lon} />
             )
           )}
         </div>
@@ -145,58 +129,22 @@ function App() {
               <p>{error}</p>
             ) : (
               forecastData && (
-                <GearRecommendation weatherId={forecastData.list[selectedDayIndex].weather[0].id}/>
+                <GearRecommendation weatherId={forecastData.list[selectedDayIndex].weather[0].id} />
               )
             )
           }
         </div>
 
-        <div className="hourly-forecast">
-          <div className={`display-day ${isNightMode ? "night-background" : "day-background"}`}>
-            <h1>{getSelectedDate().toLocaleDateString("en-GB", {weekday: "long"})}</h1>
-            <h2>{getSelectedDate().toLocaleDateString("en-GB", {day: "numeric", month: "short"})}</h2>
-            <select className="change-day" onChange={changeDay} value={selectedDayIndex}>
-              {Array.from({length: 5}).map((_, index) => {
-                const date = new Date();
-                date.setDate(date.getDate() + index);
-                return (
-                  <option key={index} value={index}>
-                    {date.toLocaleDateString("en-GB", {
-                      weekday: "short",
-                      day: "numeric",
-                      month: "short",
-                    })}
-                  </option>
-                );
-              })}
-            </select>
-          </div>
-          <div className="hourly-scroll">
-            {loading ? (
-              <p>Loading...</p>
-            ) : error ? (
-              <p>{error}</p>
-            ) : forecastData && (
-              forecastData.list[selectedDayIndex].hourly.map((hour, index) => (
-                <div key={index} className="hour-card">
-                  <p className={"time"}>
-                    {new Date(hour.dt * 1000).toLocaleTimeString([], {
-                      hour: "2-digit",
-                      minute: "2-digit",
-                      hour12: true,
-                    })}
-                  </p>
-                  <img src={require(`./assets/weather-icons/${hour.weather[0].icon}.png`)} alt="weather icon"/>
-                  <p>
-                    {hour.weather[0].main}
-                  </p>
-                  <p>
-                    {Math.round(unitConversion.convertTemperature(hour.main.temp, unit, true))}{unitConversion.getUnitSymbol_Temperature(unit)}
-                  </p>
-                </div>
-              ))
-            )}
-          </div>
+        <div className="hourly-card">
+          {loading ? (
+            <p>Loading...</p>
+          ) : error ? (
+            <p>{error}</p>
+          ) : (
+            forecastData && (
+              <HourlyForecast changeDay={(e) => setSelectedDayIndex(parseInt(e.target.value))} unit={unit} forecastData={forecastData} selectedDayIndex={selectedDayIndex} isNightMode={isNightMode} />
+            )
+          )}
         </div>
       </div>
     </div>
