@@ -1,0 +1,91 @@
+.hourly-forecast {
+    border-radius: inherit;
+    display: flex;
+    flex-direction: column; /* Default to column for mobile */
+    text-align: center;
+    justify-content: start;
+    align-items: center;
+    max-height: inherit;
+    width: 100%;
+    height: 100%;
+    gap: 1rem;
+    font-size: 0.7em;
+    padding: 0;
+}
+
+.display-day {
+    border-radius: inherit;
+    height: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    border-bottom-right-radius: 0;
+    border-bottom-left-radius: 0;
+    h1 {
+        font-size: 2rem;
+    }
+    h2 {
+        font-size: 1.5rem;
+    }
+}
+
+.hourly-scroll {
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    padding: 10px;
+    width: 100%;
+    height: 100%;
+}
+
+.hour-card {
+    border-right: 1px solid #ccc;
+    min-width: 20%;
+    width: fit-content;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    p {
+        font-size: 1.5em;
+    }
+    .time {
+        font-size: 2em;
+    }
+    img {
+        height: auto;
+        width: 80%;
+        object-fit: contain;
+    }
+}
+
+.hour-card:last-child {
+    border-right: none;
+}
+
+.change-day {
+    background: #07111b;
+    color: white;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+/* Media queries for larger screens */
+@media (min-width: 600px) {
+    .hourly-forecast {
+        flex-direction: row;
+        font-size: 1em;
+    }
+    .display-day {
+        min-width: 20%;
+        width: fit-content;
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
+}
