@@ -1,6 +1,8 @@
 import * as unitConversion from "../utils/unitConversion";
 import React from "react";
 import "../styles/HourlyForecast.css";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
 
 const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNightMode}) => {
 
@@ -10,26 +12,43 @@ const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNigh
     return nextDay;
   };
 
+  const getOrdinalSuffix = (day) => {
+    if (day > 3 && day < 21) return 'th';
+    switch (day % 10) {
+      case 1: return 'st';
+      case 2: return 'nd';
+      case 3: return 'rd';
+      default: return 'th';
+    }
+  };
+
   return (
     <div className = "hourly-forecast">
       <div className={`display-day ${isNightMode ? "night-background" : "day-background"}`}>
         <h1>{getSelectedDate().toLocaleDateString("en-GB", {weekday: "long"})}</h1>
         <h2>{getSelectedDate().toLocaleDateString("en-GB", {day: "numeric", month: "short"})}</h2>
-        <select className="change-day" onChange={changeDay} value={selectedDayIndex}>
-          {Array.from({length: 5}).map((_, index) => {
-            const date = new Date();
-            date.setDate(date.getDate() + index);
-            return (
-              <option key={index} value={index}>
-                {date.toLocaleDateString("en-GB", {
-                  weekday: "short",
-                  day: "numeric",
-                  month: "short",
-                })}
-              </option>
-            );
-          })}
-        </select>
+        <div className="change-day">
+          <button onClick={() => changeDay(selectedDayIndex - 1)} disabled={selectedDayIndex <= 0} className={"left"}>
+            <FontAwesomeIcon icon={faAngleLeft} />
+          </button>
+          <select onChange={(e) => changeDay(parseInt(e.target.value))} value={selectedDayIndex}>
+            {Array.from({length: 5}).map((_, index) => {
+              const date = new Date();
+              date.setDate(date.getDate() + index);
+              return (
+                <option key={index} value={index}>
+                  {date.toLocaleDateString("en-GB", {
+                    weekday: "short",
+                    day: "numeric"
+                  }) + getOrdinalSuffix(date.getDate())}
+                </option>
+              );
+            })}
+          </select>
+          <button onClick={() => changeDay(selectedDayIndex + 1)} disabled={selectedDayIndex >= 4} className={"right"}>
+            <FontAwesomeIcon icon={faAngleRight} />
+          </button>
+        </div>
       </div>
       <div className="hourly-scroll">
         {

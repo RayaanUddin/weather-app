@@ -57,8 +57,8 @@
         font-size: 2em;
     }
     img {
-        height: auto;
-        width: 80%;
+        height: 30%;
+        width: auto;
         object-fit: contain;
     }
 }
@@ -69,11 +69,57 @@
 
 .change-day {
     background: #07111b;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     color: white;
     border: none;
-    padding: 10px;
     border-radius: 8px;
     cursor: pointer;
+    font-size: 1em;
+    gap: 2px;
+    button {
+        padding: 7px;
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: inherit;
+        cursor: pointer;
+        border-radius: inherit;
+    }
+    button:hover {
+        background: #333333;
+    }
+    button:disabled {
+        color: #595959;
+        pointer-events: none;
+        :hover {
+            background: none;
+        }
+    }
+    button:active {
+        background: rgba(0, 0, 0, 0);
+    }
+    select {
+        padding: 7px;
+        background: none;
+        border: none;
+        color: inherit;
+        font-size: inherit;
+        cursor: pointer;
+    }
+    select:hover {
+        margin: 0;
+        background: #333333;
+    }
+    .right {
+        border-bottom-left-radius: 0;
+        border-top-left-radius: 0;
+    }
+    .left {
+        border-bottom-right-radius: 0;
+        border-top-right-radius: 0;
+    }
 }
 
 /* Media queries for larger screens */
@@ -85,6 +131,7 @@
     .display-day {
         min-width: 20%;
         width: fit-content;
+        border-radius: inherit;
         border-top-right-radius: 0;
         border-bottom-right-radius: 0;
     }

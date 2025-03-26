@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from "react";
 import "./styles/reset.css";
 import "./styles/App.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBars, faArrowLeft } from "@fortawesome/free-solid-svg-icons";
 import SunCalc from "suncalc";
 import SideBar from "./components/SideBar";
 import Map from "./components/Map";
@@ -22,6 +20,8 @@ function isNight(lat, lon, date) {
   const sunTimes = SunCalc.getTimes(now, lat, lon);
   return now < sunTimes.sunrise || now > sunTimes.sunset;
 }
+
+// localStorage.clear();
 
 function App() {
   const [forecastData, setForecastData] = useState(null);
@@ -142,7 +142,16 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <HourlyForecast changeDay={(e) => setSelectedDayIndex(parseInt(e.target.value))} unit={unit} forecastData={forecastData} selectedDayIndex={selectedDayIndex} isNightMode={isNightMode} />
+              <HourlyForecast
+                changeDay={(newIndex) => {
+                  setSelectedDayIndex(newIndex);
+                  console.log(newIndex);
+                }}
+                unit={unit}
+                forecastData={forecastData}
+                selectedDayIndex={selectedDayIndex}
+                isNightMode={isNightMode}
+              />
             )
           )}
         </div>

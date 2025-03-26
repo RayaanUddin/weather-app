@@ -34,6 +34,7 @@ const Map = ({ lat, lon }) => {
     <div className="map-container">
       <button className="settings-button" onClick={() => setShowSettings(!showSettings)}>
         <FontAwesomeIcon icon={faCog}/>
+        <img className="help" src={require("../assets/layer_help.png")} alt="help" style={{ width: "200px" }} />
       </button>
 
       {showSettings && (

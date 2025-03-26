@@ -3,12 +3,12 @@
     grid-template-columns: 2fr 1fr;
     grid-template-rows: auto auto auto auto auto;
     height: 100%;
-    font-size: 0.7em;
+    font-size: 0.8em;
 
     h1 {
         grid-column: 1;
         grid-row: 1;
-        font-size: 7em;
+        font-size: 6em;
         margin: 0;
     }
 
@@ -80,11 +80,11 @@
 }
 
 .fair {
-    color: orange;
+    color: #975804;
 }
 
 /* Media queries for larger screens */
-@media screen and (min-width: 1000px) {
+@media screen and (min-width: 600px) {
     .weather-overview {
         font-size: 1em;
     }

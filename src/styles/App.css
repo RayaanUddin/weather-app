@@ -6,6 +6,13 @@ body {
   height: 100vh;
 }
 
+.help {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 100;
+}
+
 .night-background {
   background: linear-gradient(318deg, #1d213a, #313255,
   #3b4371, #463c65, #2d2d43);
@@ -81,9 +88,9 @@ header {
 .grid-container {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 1em;
   margin: auto;
-  width: 80%;
+  width: 90%;
 }
 
 .weather-card, .map-card, .leaflet-container, .hourly-card, .gear-card {
@@ -91,6 +98,7 @@ header {
   border-radius: 12px;
   padding: 20px;
   box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.18);
+  z-index: 1;
 }
 
 .weather-card {
@@ -139,12 +147,12 @@ header {
 .gear-card img {
   width: 30px;
   height: 30px;
-  margin-right: 12px;
+  margin: 0;
 }
 
 .gear-card span {
   font-size: 1rem;
-  font-weight: 500;
+  font-weight: bold;
   color: #444;
 }
 
@@ -172,10 +180,10 @@ header {
 }
 
 /* Media queries for desktop */
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 1000px) {
   .grid-container {
     display: grid;
-    grid-template-columns: 1fr 1fr;
+    grid-template-columns: 1.4fr 1fr;
     grid-template-rows: auto auto;
   }
 
@@ -189,6 +197,10 @@ header {
   }
 
   .hourly-card {
-    max-height: 30vh;
+    max-height: 20vh;
   }
+}
+
+.upper {
+  text-transform: uppercase;
 }
