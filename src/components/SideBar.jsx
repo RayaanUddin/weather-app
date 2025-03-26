@@ -92,6 +92,7 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
             value={inputLocation}
             onChange={(e) => setInputLocation(e.target.value)}
             placeholder="Enter location"
+            className={`menu-button ${flashRed ? "flash-red" : ""}`}
           />
           {error && <p className="error-message">{error}</p>}
           <button onClick={handleLocationSearch}>Search</button>
