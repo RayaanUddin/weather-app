@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import {faCog} from "@fortawesome/free-solid-svg-icons";
+import { faCog } from "@fortawesome/free-solid-svg-icons";
 import L from "leaflet";
 import "../api/map.js";
 import "../styles/Map.css";
 import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
-import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
-import {getLayerAPI, getWeatherLayers} from "../api/map";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { getLayerAPI, getWeatherLayers } from "../api/map";
 
 const customMarker = new L.Icon({
   iconUrl: markerIconPng,
@@ -21,6 +21,15 @@ const customMarker = new L.Icon({
 const Map = ({ lat, lon }) => {
   const [selectedLayers, setSelectedLayers] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
+  const [showHelp, setShowHelp] = useState(false);
+
+  useEffect(() => {
+    const hasShownHelp = localStorage.getItem("hasShownHelp");
+    if (!hasShownHelp) {
+      setShowHelp(true);
+      localStorage.setItem("hasShownHelp", "true");
+    }
+  }, []);
 
   const toggleLayer = (layer) => {
     setSelectedLayers((prev) =>
@@ -32,11 +41,14 @@ const Map = ({ lat, lon }) => {
 
   return (
     <div className="map-container">
-      <button className="settings-button" onClick={() => setShowSettings(!showSettings)}>
-        <FontAwesomeIcon icon={faCog}/>
-        <img className="help" src={require("../assets/layer_help.png")} alt="help" style={{ width: "200px" }} />
-      </button>
-
+      <div>
+        <button className="settings-button" onClick={() => setShowSettings(!showSettings)}>
+          <FontAwesomeIcon icon={faCog} />
+        </button>
+        {showHelp && (
+          <img className="help" src={require("../assets/layer_help.png")} alt="help" style={{ width: "200px", top: 30, right: 30 }} />
+        )}
+      </div>
       {showSettings && (
         <div className="settings-panel">
           <h3>Weather Layers</h3>
@@ -58,10 +70,7 @@ const Map = ({ lat, lon }) => {
 
         {/* Render selected weather layers */}
         {selectedLayers.map((layer) => (
-          <TileLayer
-            key={layer}
-            url={getLayerAPI(layer)}
-          />
+          <TileLayer key={layer} url={getLayerAPI(layer)} />
         ))}
 
         <Marker position={[lat, lon]} icon={customMarker}>
