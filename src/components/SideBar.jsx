@@ -4,12 +4,14 @@ import { locationCoords } from "../api/location";
 import { fetchCurrentForecast } from "../api/forecast";
 import * as unitConversion from "../utils/unitConversion";
 import LocationWeather from "./LocationWeather";
+import { useErrorHandler } from "../utils/errorHandler";
 
 const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
   const [inputLocation, setInputLocation] = useState("");
   const [showChangeLocation, setShowChangeLocation] = useState(false);
   const [searchHistory, setSearchHistory] = useState([]);
   const [forecasts, setForecasts] = useState({}); // Store forecasts in an object
+  const { error, flashRed, handleError } = useErrorHandler(null, 10000);
 
   // Load search history from localStorage
   useEffect(() => {
@@ -64,6 +66,7 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
           localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
         }
       } else {
+        handleError("Could not retrieve location.");
         console.error("Geocoding error:", inputLocation);
       }
     }
@@ -90,6 +93,7 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
             onChange={(e) => setInputLocation(e.target.value)}
             placeholder="Enter location"
           />
+          {error && <p className="error-message">{error}</p>}
           <button onClick={handleLocationSearch}>Search</button>
           <h4>Previous Searches</h4>
           <div className="previous-locations">

@@ -91,7 +91,7 @@ function App() {
 
   return (
     <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
-      <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} />
+      <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} setCoords={setCoords}/>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
         <SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} />
       </div>

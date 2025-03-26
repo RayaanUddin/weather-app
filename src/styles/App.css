@@ -62,20 +62,6 @@ body {
   padding-top: 5vh;
 }
 
-header {
-  position: fixed;
-  top: 0;
-  display: flex;
-  width: 100%;
-  justify-content: start;
-  padding: 10px;
-  height: 4vh;
-  z-index: 1000;
-  background: rgba(255, 255, 255, 0.07);
-  align-items: center;
-  color: inherit;
-}
-
 .menu-button {
   color: inherit;
   border: none;
@@ -201,4 +187,19 @@ header {
 
 .upper {
   text-transform: uppercase;
+}
+
+.flash-red {
+  animation: flash-red 1s;
+}
+
+@keyframes flash-red {
+  0% { background-color: rgba(133, 0, 0, 0.59); }
+  100% { background-color: initial; }
+}
+
+.error-message {
+  color: red;
+  font-size: 1rem;
+  margin: 5px;
 }
