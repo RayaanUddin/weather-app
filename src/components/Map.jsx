@@ -42,7 +42,10 @@ const Map = ({ lat, lon }) => {
   return (
     <div className="map-container">
       <div>
-        <button className="settings-button" onClick={() => setShowSettings(!showSettings)}>
+        <button className="settings-button" onClick={() => {
+          setShowSettings(!showSettings)
+          setShowHelp(false)
+        }}>
           <FontAwesomeIcon icon={faCog} />
         </button>
         {showHelp && (
