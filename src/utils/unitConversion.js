@@ -3,13 +3,15 @@ export const UnitType = {
   IMPERIAL: "imperial",
 };
 
+/*@param {UnitType} unit Unit type*/
 /**
  * Convert temperature from Kelvin to Celsius or Fahrenheit
  * @param {number} temp Temperature in Kelvin
- * @param {UnitType} unit Unit type
+ * @param {string} unit Unit type ("metric" or "imperial")
  * @returns {number} Converted temperature
  */
-export const convertTemperature = (temp:number, unit:UnitType):number => {
+/*export const convertTemperature = (temp:number, unit:UnitType):number => {*/
+export const convertTemperature = (temp, unit) => {
   if (unit === UnitType.METRIC) {
     return temp - 273.15;
   } else if (unit === UnitType.IMPERIAL) {
@@ -25,7 +27,8 @@ export const convertTemperature = (temp:number, unit:UnitType):number => {
  * @param {UnitType} unit
  * @return {string}
  */
-export const getUnitSymbol_Temperature = (unit:UnitType) => {
+/*export const getUnitSymbol_Temperature = (unit:UnitType) => {*/
+export const getUnitSymbol_Temperature = (unit) => {
   return unit === UnitType.METRIC ? "°C" : "°F";
 }
 
@@ -34,7 +37,8 @@ export const getUnitSymbol_Temperature = (unit:UnitType) => {
  * @param {UnitType} unit
  * @return {string}
  */
-export const getUnitSymbol_Speed = (unit:UnitType) => {
+/*export const getUnitSymbol_Speed = (unit:UnitType) => {*/
+export const getUnitSymbol_Speed = (unit) => {
   return unit === UnitType.METRIC ? "km/h" : "mph";
 }
 
@@ -44,7 +48,8 @@ export const getUnitSymbol_Speed = (unit:UnitType) => {
  * @param {UnitType} unit Unit type
  * @returns {number} Converted wind speed
  */
-export const convertSpeed = (speed:number, unit:UnitType):number => {
+/*export const convertSpeed = (speed:number, unit:UnitType):number => {*/
+export const convertSpeed = (speed, unit) => {
   if (unit === UnitType.METRIC) {
     return speed * 3.6;
   } else if (unit === UnitType.IMPERIAL) {

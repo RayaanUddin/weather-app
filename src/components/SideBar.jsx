@@ -12,6 +12,7 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [forecasts, setForecasts] = useState({}); // Store forecasts in an object
   const { error, flashRed, handleError } = useErrorHandler(null, 10000);
+  const [showSettings, setShowSettings] = useState(false)
 
   // Load search history from localStorage
   useEffect(() => {
@@ -82,20 +83,38 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
     }
   };
 
+  // Clears the local storage, so that users can remove previously searched locations for example
+  const clearStorage = () => {
+    localStorage.clear();
+    alert("Local storage has been cleared");
+    window.location.reload();
+  }
+
+  // Changes the unit of measurement (e.g., mph to kph), updates local storage, and refreshes the page.
+  const changeUnit = (UnitType) =>{
+    setUnit(UnitType)
+    localStorage.setItem("unit", UnitType);
+    //window.location.reload();
+  }
+
+
+
   return (
     <div className="container">
       <button onClick={() => setShowChangeLocation(!showChangeLocation)}>Change Location</button>
       {showChangeLocation && (
         <div className="location-search">
-          <input
-            type="text"
-            value={inputLocation}
-            onChange={(e) => setInputLocation(e.target.value)}
-            placeholder="Enter location"
-            className={`menu-button ${flashRed ? "flash-red" : ""}`}
-          />
-          {error && <p className="error-message">{error}</p>}
-          <button onClick={handleLocationSearch}>Search</button>
+          <div className="location-component">
+            <input
+              type="text"
+              value={inputLocation}
+              onChange={(e) => setInputLocation(e.target.value)}
+              placeholder="Enter location"
+              className={`menu-button ${flashRed ? "flash-red" : ""}`}
+            />
+            {error && <p className="error-message">{error}</p>}
+            <button onClick={handleLocationSearch}>Search</button>
+          </div>
           <h4>Previous Searches</h4>
           <div className="previous-locations">
             {searchHistory.map((location, index) => (
@@ -107,7 +126,22 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
         </div>
       )}
       <button>Select a Route</button>
-      <button>Settings</button>
+      <button onClick={()=>setShowSettings(!showSettings)}>Settings</button>
+      {showSettings && (
+          <div className="settings-page">
+            <div className="change-metrics">
+              <h4>Change Metrics</h4>
+              <input type="radio" id="metric" name="choice" onChange={() => changeUnit(unitConversion.UnitType.METRIC)} value="metric" checked={localStorage.getItem("unit") === "metric"}/>
+              <label htmlFor="metric">Metric</label><br/>
+              <input type="radio" id="imperial" name="choice" onChange={() => changeUnit(unitConversion.UnitType.IMPERIAL)} value="imperial" checked={localStorage.getItem("unit") === "imperial"}/>
+              <label htmlFor="imperial">Imperial</label><br/>
+            </div>
+            <div className="clear-storage">
+              <h4>Clear local storage</h4>
+              <button onClick={clearStorage}>Clear</button>
+            </div>
+          </div>
+      )}
     </div>
   );
 };

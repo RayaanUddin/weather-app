@@ -21,7 +21,7 @@ function isNight(lat, lon, date) {
   return now < sunTimes.sunrise || now > sunTimes.sunset;
 }
 
-localStorage.clear();
+/*localStorage.clear();*/
 
 function App() {
   const [forecastData, setForecastData] = useState(null);
