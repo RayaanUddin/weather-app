@@ -125,10 +125,14 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
         <div className="settings-page">
           <div className="change-metrics">
             <h4>Change Metrics</h4>
-            <input type="radio" id="metric" name="choice" onChange={() => setUnit(unitConversion.UnitType.METRIC)} value="metric" checked={unit === unitConversion.UnitType.METRIC} />
-            <label htmlFor="metric">Metric</label><br />
-            <input type="radio" id="imperial" name="choice" onChange={() => setUnit(unitConversion.UnitType.IMPERIAL)} value="imperial" checked={unit === unitConversion.UnitType.IMPERIAL} />
-            <label htmlFor="imperial">Imperial</label><br />
+            {
+              Object.values(unitConversion.UnitType).map((unitType) => (
+                <React.Fragment key={unitType}>
+                  <input type="radio" id={unitType} name="choice" onChange={() => setUnit(unitType)} value={unitType} checked={unit === unitType} />
+                  <label htmlFor={unitType}>{unitType.charAt(0).toUpperCase() + unitType.slice(1)}</label><br />
+                </React.Fragment>
+              ))
+            }
           </div>
           <div className="clear-storage">
             <h4>Clear Data</h4>
