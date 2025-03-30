@@ -5,22 +5,24 @@ import { fetchCurrentForecast } from "../api/forecast";
 import * as unitConversion from "../utils/unitConversion";
 import LocationWeather from "./LocationWeather";
 import { useErrorHandler } from "../utils/errorHandler";
+import ConfirmModal from "./ConfirmModal";
+import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 
 const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
   const [inputLocation, setInputLocation] = useState("");
   const [showChangeLocation, setShowChangeLocation] = useState(false);
   const [searchHistory, setSearchHistory] = useState([]);
-  const [forecasts, setForecasts] = useState({}); // Store forecasts in an object
+  const [forecasts, setForecasts] = useState({});
   const { error, flashRed, handleError } = useErrorHandler(null, 10000);
-  const [showSettings, setShowSettings] = useState(false)
+  const [showSettings, setShowSettings] = useState(false);
+  const [showModal, setShowModal] = useState(false);
 
-  // Load search history from localStorage
   useEffect(() => {
     const storedLocations = JSON.parse(localStorage.getItem("searchHistory")) || [];
     setSearchHistory(storedLocations);
   }, []);
 
-  // Fetch forecasts whenever searchHistory changes
   useEffect(() => {
     const fetchForecasts = async () => {
       const results = await Promise.all(
@@ -30,16 +32,14 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
             return { location, forecast: response.data };
           } catch (error) {
             console.error(`Error fetching forecast for ${location}:`, error);
-            // Remove from history
             const updatedHistory = searchHistory.filter((item) => item !== location);
             setSearchHistory(updatedHistory);
             localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
-            return { location, forecast: null }; // Set null on failure
+            return { location, forecast: null };
           }
         })
       );
 
-      // Convert results into an object for efficient lookup
       const forecastsObject = results.reduce((acc, item) => {
         acc[item.location] = item.forecast;
         return acc;
@@ -60,7 +60,6 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
         setCoords(coords);
         toggleMenu();
 
-        // Update search history (avoid duplicates)
         if (!searchHistory.includes(inputLocation)) {
           const updatedHistory = [inputLocation, ...searchHistory].slice(0, 5);
           setSearchHistory(updatedHistory);
@@ -83,25 +82,17 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
     }
   };
 
-  // Clears the local storage, so that users can remove previously searched locations for example
   const clearStorage = () => {
     localStorage.clear();
-    alert("Local storage has been cleared");
     window.location.reload();
-  }
-
-  // Changes the unit of measurement (e.g., mph to kph), updates local storage, and refreshes the page.
-  const changeUnit = (UnitType) =>{
-    setUnit(UnitType)
-    localStorage.setItem("unit", UnitType);
-    //window.location.reload();
-  }
-
-
+  };
 
   return (
     <div className="container">
-      <button onClick={() => setShowChangeLocation(!showChangeLocation)}>Change Location</button>
+      <button onClick={() => setShowChangeLocation(!showChangeLocation)} className="toggle-button">
+        Change Location
+        <FontAwesomeIcon icon={faCaretDown}  className= {showChangeLocation ? "caret-icon icon180" : "caret-icon"} />
+      </button>
       {showChangeLocation && (
         <div className="location-search">
           <div className="location-component">
@@ -118,30 +109,38 @@ const SideBar = ({ setCoords, unit, setUnit, toggleMenu }) => {
           <h4>Previous Searches</h4>
           <div className="previous-locations">
             {searchHistory.map((location, index) => (
-              forecasts[location]?
-                <LocationWeather forecast={forecasts[location]} key={index} unit={unit} onClick={() => handleHistorySearch(location)}/>
+              forecasts[location] ?
+                <LocationWeather forecast={forecasts[location]} key={index} unit={unit} onClick={() => handleHistorySearch(location)} />
                 : <button key={index} onClick={() => handleHistorySearch(location)}>loading...</button>
             ))}
           </div>
         </div>
       )}
       <button>Select a Route</button>
-      <button onClick={()=>setShowSettings(!showSettings)}>Settings</button>
+      <button onClick={() => setShowSettings(!showSettings)} className="toggle-button">
+        Settings
+        <FontAwesomeIcon icon={faCaretDown}  className= {showSettings ? "caret-icon icon180" : "caret-icon"} />
+      </button>
       {showSettings && (
-          <div className="settings-page">
-            <div className="change-metrics">
-              <h4>Change Metrics</h4>
-              <input type="radio" id="metric" name="choice" onChange={() => changeUnit(unitConversion.UnitType.METRIC)} value="metric" checked={localStorage.getItem("unit") === "metric"}/>
-              <label htmlFor="metric">Metric</label><br/>
-              <input type="radio" id="imperial" name="choice" onChange={() => changeUnit(unitConversion.UnitType.IMPERIAL)} value="imperial" checked={localStorage.getItem("unit") === "imperial"}/>
-              <label htmlFor="imperial">Imperial</label><br/>
-            </div>
-            <div className="clear-storage">
-              <h4>Clear local storage</h4>
-              <button onClick={clearStorage}>Clear</button>
-            </div>
+        <div className="settings-page">
+          <div className="change-metrics">
+            <h4>Change Metrics</h4>
+            <input type="radio" id="metric" name="choice" onChange={() => setUnit(unitConversion.UnitType.METRIC)} value="metric" checked={unit === unitConversion.UnitType.METRIC} />
+            <label htmlFor="metric">Metric</label><br />
+            <input type="radio" id="imperial" name="choice" onChange={() => setUnit(unitConversion.UnitType.IMPERIAL)} value="imperial" checked={unit === unitConversion.UnitType.IMPERIAL} />
+            <label htmlFor="imperial">Imperial</label><br />
           </div>
+          <div className="clear-storage">
+            <h4>Clear Data</h4>
+            <button onClick={() => setShowModal(true)}>Clear</button>
+          </div>
+        </div>
       )}
+      <ConfirmModal
+        show={showModal}
+        onClose={() => setShowModal(false)}
+        onConfirm={clearStorage}
+      />
     </div>
   );
 };

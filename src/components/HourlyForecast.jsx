@@ -28,7 +28,7 @@ const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNigh
         <h1>{getSelectedDate().toLocaleDateString("en-GB", {weekday: "long"})}</h1>
         <h2>{getSelectedDate().toLocaleDateString("en-GB", {day: "numeric", month: "short"})}</h2>
         <div className="change-day">
-          <button onClick={() => changeDay(selectedDayIndex - 1)} disabled={selectedDayIndex <= 0} className={"left"}>
+          <button onClick={() => changeDay(selectedDayIndex - 1)} disabled={selectedDayIndex <= 0} className={"direction-button left"}>
             <FontAwesomeIcon icon={faAngleLeft} />
           </button>
           <select onChange={(e) => changeDay(parseInt(e.target.value))} value={selectedDayIndex}>
@@ -45,7 +45,7 @@ const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNigh
               );
             })}
           </select>
-          <button onClick={() => changeDay(selectedDayIndex + 1)} disabled={selectedDayIndex >= 4} className={"right"}>
+          <button onClick={() => changeDay(selectedDayIndex + 1)} disabled={selectedDayIndex >= 4} className={"direction-button right"}>
             <FontAwesomeIcon icon={faAngleRight} />
           </button>
         </div>

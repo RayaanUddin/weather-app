@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    padding: 10vh 20px 20px 20px;
+    padding: 10vh 1em 1em 20px;
     width: 100%;
     height: 100vh;
     overflow-y: auto;
@@ -155,6 +155,22 @@ h2 {
     cursor: pointer;
     transition: background 0.3s;
     width: 100%;
+}
+
+.toggle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.caret-icon {
+    position: absolute;
+    right: 2em;
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon180 {
+    transform: rotate(180deg);
 }
 
 
