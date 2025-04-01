@@ -1,0 +1,387 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
+
+.filters label {
+    color: #000;
+    font-family: 'Inter', sans-serif;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+    
+}
+.filters {
+    margin-top: 10px;
+    position: relative;
+    right: 150px;
+}
+.maps {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.maps input {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+.searchButton {
+    width: 100px;
+    margin-left: 15px;
+    position: relative;
+    right:100px;
+}
+
+body {
+    background: linear-gradient(140deg, #7F9EB9 16.57%, #A8A592 52.41%, #C5A575 81.76%);
+    display: flex;
+}
+label {
+    display: flex;
+    width: 201px;
+    height: 35px;
+    flex-shrink: 0;
+    
+}
+
+label p {
+    height: 100px;
+}
+
+label  {
+    font-size: 10px;
+    display: flex;
+}
+label #text {
+    margin-bottom: 10px;
+}
+.maps {
+    display: flex;
+    flex-direction: column;
+    width: 350px;
+}
+
+.maps input {
+    width: 330px;
+    height: 24px;
+    flex-shrink: 0;
+    color: rgba(0, 0, 0, 0.40);
+    font-family: Inter;
+    font-size: 28px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    padding: 10px;
+    }
+
+.location-icon {
+    position: relative;
+    top:20px;
+}
+input {
+    margin-right: 10px;
+    border: none; /* Remove all borders */
+    border-bottom: 2px solid white; /* Keep only the bottom border */
+    outline: none; /* Remove focus outline */
+    padding: 5px; /* Optional: Adds spacing inside input */
+    background: transparent;
+}
+.box {
+    width: 1206px;
+    height: 177px;
+    flex-shrink: 0;
+    border-radius: 34px;
+    border: 1px solid #000;
+    background: linear-gradient(139deg, rgba(255, 255, 255, 0.20) 7.88%, rgba(255, 255, 255, 0.40) 92.12%);
+    box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(2.5px);
+    /* filter: blur(2.5px); */
+}
+
+.stuff {
+    display: flex;
+}
+
+
+button {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+
+  .buttonContainer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh; /* Full viewport height */
+  }
+  
+  button {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    width: 150px;
+  }
+  
+  button:hover {
+    background-color: #0056b3;
+  }
+  
+  .boxContainer {
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center;     /* Center vertically */
+    height: 15vh;           /* Full viewport height */
+    padding: 20px;
+    border-radius: 34px;
+    border: 1px solid #000;
+    background: linear-gradient(139deg, rgba(255, 255, 255, 0.20) 7.88%, rgba(255, 255, 255, 0.40) 92.12%);
+    box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
+    flex-direction: column;
+    width: 750px;
+    margin-left: 360px;
+    margin-bottom: 20px;
+}
+
+/* Centralizing content inside .stuff */
+.stuff {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 200%;
+    max-width: 600px; /* Optional: Set a max-width to prevent stretching */
+}
+
+.mapContainer {
+    width: 1206px;
+    height: 519px;
+    flex-shrink: 0;
+    border-radius: 34px;
+    border: 1px solid #000;
+
+    background: linear-gradient(139deg, rgba(255, 255, 255, 0.20) 7.88%, rgba(255, 255, 255, 0.40) 92.12%);
+
+    box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
+    backdrop-filter: blur(2.5px);
+    margin-left: 160px;
+}
+
+.mapGoogle {
+    width: 1134px;
+    height: 368px;
+    flex-shrink: 0;
+    margin-left: 20px;
+    margin-top: 20px;
+}
+
+input[type="checkbox"] {
+    
+    margin-bottom: 10px;
+    border-radius: 50%;        /* Make it circular */
+    border: 2px solid #007bff;/* Border color */
+    /* Background color */
+
+}
+
+.boxContainer {
+    display: flex;
+    align-items: space-between;
+    width: 1165px;
+    margin-left: 160px;
+}
+
+.maps input {
+    width: 428px;
+    
+}
+.maps {
+    margin-right: 300px;
+}
+.inputBox {
+    display: flex;
+    margin-right: 150px;
+}
+.menuName {
+    color: #000;
+    text-align: center;
+    font-family: 'Inter', sans-serif;
+    font-size: 30px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    display: flex;
+    justify-content: center;
+}
+
+.menu {
+    display: flex;
+}
+
+.menuImgs {
+    width: 53px;
+    height: 53px;
+    flex-shrink: 0;
+    aspect-ratio: 1/1;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+}
+.stuffImgs {
+    display: flex;
+    flex-direction: row;
+}
+
+/* .mapGoogle {
+    width: 900px;
+} */
+
+.confirmation {
+    display: flex;
+    margin-top:10vh ;
+    margin-left: 5vw;
+    font-family: 'Inter', sans-serif;
+    color: #000;
+    font-size: 24px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+}
+
+.disclaimer {
+    right: 2vw;
+    font-size: 20px;
+    position: relative;
+    bottom: 13px;
+}
+.confirmRoute {
+    position: relative;
+    width: 7vw;
+    height: 5vh;
+    top: 1.5vh;
+    right: 3vw;
+    display: flex;
+    justify-content: center;
+}
+
+.mapContainer {
+    margin-bottom: 5vh;
+}
+
+.popup-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5); 
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1000;
+  }
+.popup {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    font-size: 20px;
+    font-weight: bold;
+  }
+  
+
+@media (max-width:500px) {
+    .boxContainer {
+        display: flex;
+        flex-direction: column;
+        margin-left: 0px;
+        width: 420px;
+        height: 38vh; 
+        
+        
+    }
+    .inputBox {
+        display: flex;
+        flex-direction: column;
+        position: relative;
+        left: 200px;
+    }
+    .stuff {
+        display: flex;
+        flex-direction: column;
+        left: 20px;
+        padding: 20px;
+    }
+    .stuffImgs {
+        display: flex;
+        flex-direction: row;
+        padding: 20px;
+    }
+    .maps input {
+        font-size: 20px;
+        width:302px;
+        position: relative;
+        top:25px;
+    }
+    .filters {
+        display: flex;
+        position: relative;
+        left: 150px;
+        flex-direction: column;
+        margin-top: 40px;
+        
+    }
+    .images {
+        padding: 10px;
+    }
+    .searchButton {
+        position: relative;
+        right: 20%;
+        bottom:10%;
+    }
+    .mapContainer {
+        margin-left: 0;
+        width: 460px;
+        height: 600px;
+    }
+    .mapGoogle {
+        width: 434px;
+        height: 368px;
+        flex-shrink: 0;
+        margin-left: 20px;
+        margin-top: 20px;
+    }
+    .disclaimer {
+        font-size: 12px;
+        position: relative;
+        top: 7px;
+        width: 380px;
+        left: 10px;
+    }
+    body {
+        overflow-x: hidden; /* Prevent horizontal scrolling */
+      }
+    .confirmRoute{
+        font-size: 19px;
+        width: 90px;
+        height: 40px;
+        position: relative;
+        left:36%;
+    }
+    .confirmation {
+        display: flex;
+        flex-direction: column;
+    }
+    
+}
