@@ -6,12 +6,14 @@ import {faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
 
 const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNightMode}) => {
 
+  // Function to get the selected date
   const getSelectedDate = () => {
     let nextDay = new Date();
     nextDay.setDate(new Date().getDate() + selectedDayIndex);
     return nextDay;
   };
 
+  // Function to get the ordinal suffix for the date
   const getOrdinalSuffix = (day) => {
     if (day > 3 && day < 21) return 'th';
     switch (day % 10) {
@@ -37,7 +39,7 @@ const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNigh
               date.setDate(date.getDate() + index);
               return (
                 <option key={index} value={index}>
-                  {date.toLocaleDateString("en-GB", {
+                  {date.toLocaleDateString("en-GB", { // Format the date in the format "Wed, 1st"
                     weekday: "short",
                     day: "numeric"
                   }) + getOrdinalSuffix(date.getDate())}
