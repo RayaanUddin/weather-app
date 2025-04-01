@@ -59,3 +59,46 @@ export const convertSpeed = (speed, unit) => {
     return speed;
   }
 }
+
+/**
+ * Get pressure unit by Unit Type
+ * @param {UnitType} unit
+ * @return {string}
+ */
+/*export const getUnitSymbol_Pressure = (unit:UnitType) => {*/
+export const getUnitSymbol_Pressure = (unit) => {
+  return unit === UnitType.METRIC ? "hPa" : "inHg";
+}
+
+/**
+ * Convert pressure from hPa to imHg, or leave it as hPa.
+ * @param {number} pressure Pressure in hPa
+ * @param {UnitType} unit Unit type
+ * @returns {number} Converted pressure
+ */
+/*export const convertPressure = (pressure:number, unit:UnitType):number => {*/
+export const convertPressure = (pressure, unit) => {
+  if (unit === UnitType.METRIC) {
+    return pressure;
+  } else if (unit === UnitType.IMPERIAL) {
+    return pressure * 0.621;
+  } else {
+    console.error("Invalid unit type");
+    return pressure;
+  }
+}
+
+/**
+ * Convert unix timestamp into 24h time.
+ * @param {number} timestamp Unix timestamp
+ * @returns {number} Converted time (24h time)
+ */
+/*export const convertPressure = (pressure:number, unit:UnitType):number => {*/
+export const convertTimestampToTime = (timestamp) => {
+  const date = new Date(timestamp * 1000);
+  let hours = date.getHours();
+  let minutes = date.getMinutes();
+  hours = hours < 10 ? `0${hours}` : hours;
+  minutes = minutes < 10 ? `0${minutes}` : minutes;
+  return `${hours}:${minutes}`;
+}

@@ -9,7 +9,7 @@ header {
     background: rgba(255, 255, 255, 0.07);
     align-items: center;
     color: inherit;
-    .menu-button {
+    button {
         padding: 0 5px;
     }
     button:hover {

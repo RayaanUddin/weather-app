@@ -3,8 +3,21 @@ import {calculateRunningCondition} from "../utils/weatherUtil";
 import "../styles/WeatherOverview.css";
 import {getUnitSymbol_Speed} from "../utils/unitConversion";
 
-const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) => {
-  return (
+const WeatherOverview = ({selectedMetricsToDisplay, forecastData, selectedDayIndex, unit, isNightMode}) => {
+    const allMetrics = [
+        { name: 'Wind Speed', icon: 'wind.png', value: `${Math.round(unitConversion.convertSpeed(forecastData.list[selectedDayIndex].speed, unit))}`, unit: unitConversion.getUnitSymbol_Speed(unit) },
+        { name: 'Precipitation', icon: 'precipitation.png', value: forecastData.list[selectedDayIndex].pop * 100, unit: '%' },
+        { name: 'Gust', icon: 'gust.png', value: `${Math.round(unitConversion.convertSpeed(forecastData.list[selectedDayIndex].gust, unit))}`, unit: unitConversion.getUnitSymbol_Speed(unit) },
+        { name: 'Humidity', icon: 'humidity.png', value: forecastData.list[selectedDayIndex].humidity, unit: '%' },
+        { name: 'Sunrise', icon: 'sunrise.png', value: unitConversion.convertTimestampToTime(forecastData.list[selectedDayIndex].sunrise), unit: '' },
+        { name: 'Air Pressure', icon: 'pressure.png', value: `${Math.round(unitConversion.convertPressure(forecastData.list[selectedDayIndex].pressure, unit))}`, unit: unitConversion.getUnitSymbol_Pressure(unit) },
+        { name: 'Sunset', icon: 'sunset.png', value: unitConversion.convertTimestampToTime(forecastData.list[selectedDayIndex].sunset), unit: '' },
+        { name: 'Feels Like', icon: 'temperatures.png', value: `${Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].feels_like.day, unit))} / ${Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].feels_like.night, unit))}`, unit: unitConversion.getUnitSymbol_Temperature(unit) },
+        { name: 'Clouds', icon: 'clouds.png', value: forecastData.list[selectedDayIndex].clouds, unit: '%' },
+    ];
+    //forecastData.list[selectedDayIndex].feelsLike
+
+    return (
     <div className="weather-overview">
       <h1>
         {selectedDayIndex === 0
@@ -26,26 +39,17 @@ const WeatherOverview = ({forecastData, selectedDayIndex, unit, isNightMode}) =>
       <p className="desc">{forecastData.list[selectedDayIndex].weather[0].description}</p>
       <p className="location">📍 {(forecastData.city.name).charAt(0).toUpperCase() + (forecastData.city.name).slice(1).toLowerCase()}</p>
       <div className="metrics">
-        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
-          <img src={require("../assets/metric-icons/wind.png")} alt="icon" />
-          <p>Wind</p>
-          <p>{Math.round(unitConversion.convertSpeed(forecastData.list[selectedDayIndex].speed, unit)*100)/100+" "+unitConversion.getUnitSymbol_Speed(unit)}</p>
-        </div>
-        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
-          <img src={require("../assets/metric-icons/precipitation.png")} alt="icon" />
-          <p>Precipitation</p>
-          <p>{forecastData.list[selectedDayIndex].pop * 100}%</p>
-        </div>
-        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
-          <img src={require("../assets/metric-icons/pressure.png")} alt="icon" />
-          <p>Pressure</p>
-          <p>{forecastData.list[selectedDayIndex].pressure}</p>
-        </div>
-        <div className={`metric ${isNightMode ? "night-background" : "day-background"}`}>
-          <img src={require("../assets/metric-icons/humidity.png")} alt="icon" />
-          <p>Humidity</p>
-          <p>{forecastData.list[selectedDayIndex].humidity}%</p>
-        </div>
+          {allMetrics.map((metric) => {
+              const isVisible = selectedMetricsToDisplay[metric.name];
+              if (!isVisible) return null;
+              return (
+                  <div className={`metric ${isNightMode ? 'night-background' : 'day-background'}`} key={metric.name}>
+                      <img src={require(`../assets/metric-icons/${metric.icon}`)} alt="icon" />
+                      <p>{metric.name}</p>
+                      <p>{metric.value} {metric.unit}</p>
+                  </div>
+              );
+          })}
       </div>
       <p className="condition">
         Running Condition:
