@@ -2,7 +2,7 @@
     position: fixed;
     top: 0;
     left: 0;
-    padding: 10vh 1em 1em 20px;
+    padding: 10vh 20px 20px 20px;
     width: 100%;
     height: 100vh;
     overflow-y: auto;
@@ -112,7 +112,7 @@ h2 {
     animation: fadeIn 0.3s ease-in-out;
 }
 
-.change-metrics, .clear-storage{
+.change-metrics, .clear-storage, .display-meters{
     background-color: #333333;
     padding: 15px;
     border-radius: 8px;
@@ -129,19 +129,19 @@ h2 {
     margin-bottom: 10px;
 }
 
-.change-metrics input[type="radio"] {
+.change-metrics input[type="radio"], .display-meters form div input[type="checkbox"]{
     margin-right: 8px;
     accent-color: #5DADE2;
 }
 
-.change-metrics label {
+.change-metrics label, .display-meters form div label{
     font-size: 1rem;
     color: #dcdcdc;
     cursor: pointer;
     transition: color 0.2s ease-in-out;
 }
 
-.change-metrics label:hover {
+.change-metrics label:hover, .display-meters form div label:hover{
     color: #5DADE2;
 }
 
@@ -157,22 +157,9 @@ h2 {
     width: 100%;
 }
 
-.toggle-button {
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.display-meters form button {
+    margin-top: 10px;
 }
-
-.caret-icon {
-    position: absolute;
-    right: 2em;
-    transition: transform 0.2s ease-in-out;
-}
-
-.icon180 {
-    transform: rotate(180deg);
-}
-
 
 /* Media queries for desktop */
 @media screen and (min-width: 600px) {

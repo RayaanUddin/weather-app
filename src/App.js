@@ -21,6 +21,7 @@ function isNight(lat, lon, date) {
   return now < sunTimes.sunrise || now > sunTimes.sunset;
 }
 
+/*localStorage.clear();*/
 
 function App() {
   const [forecastData, setForecastData] = useState(null);
@@ -42,6 +43,13 @@ function App() {
     const now = new Date().getTime();
     return now - timestamp < CACHE_EXPIRY_HOURS * 60 * 60 * 1000; // Check if cache is still valid
   };
+
+  //Passed as a prop into sidebar and WeatherOverview. Settings inside sidebar toggles this, WeatherOverview will read these states.
+  const [selectedMetricsToDisplay, setSelectedMetricsToDisplay] = useState({
+    "Gust": false, "Precipitation": true, "Sunrise": false,
+    "Air Pressure": true, "Sunset": false, "Feels Like": false,
+    "Clouds": false, "Wind Speed": true, "Humidity": true,
+  });
 
   // Get coordinates on initial load
   useEffect(() => {
@@ -92,7 +100,7 @@ function App() {
     <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
       <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} setCoords={setCoords}/>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        <SideBar setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} />
+        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} />
       </div>
       <div className="grid-container">
         <div className="weather-card">
@@ -102,7 +110,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <WeatherOverview forecastData={forecastData} selectedDayIndex={selectedDayIndex} unit={unit} isNightMode={isNightMode} />
+              <WeatherOverview selectedMetricsToDisplay={selectedMetricsToDisplay} forecastData={forecastData} selectedDayIndex={selectedDayIndex} unit={unit} isNightMode={isNightMode} />
             )
           )}
         </div>
