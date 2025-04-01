@@ -2,13 +2,13 @@
     position: fixed;
     top: 0;
     left: 0;
-    padding: 10vh 20px 20px 20px;
+    padding: 10vh 1em 1em 20px;
     width: 100%;
     height: 100vh;
     overflow-y: auto;
-    background: rgba(30, 30, 30, 0.9);
+    background: linear-gradient(135deg, #1E2A38, #2C3E50);
     backdrop-filter: blur(10px);
-    color: white;
+    color: #E0E3EB;
     box-shadow: 4px 0 12px rgba(0, 0, 0, 0.3);
     transform: translateX(-100%);
     transition: transform 0.4s ease-in-out;
@@ -30,19 +30,19 @@
     padding: 12px;
     font-size: 16px;
     font-weight: bold;
-    background: linear-gradient(135deg, #FFD93D, #FFCC70);
+    background: linear-gradient(135deg, #4E89AE, #5DADE2);
     border: none;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    color: #222;
+    color: #E0E3EB;
 }
 
 h2 {
     text-align: center;
     font-size: 22px;
     margin-bottom: 20px;
-    color: #FFD93D; /* Gold accent color */
+    color: #E0E3EB;
 }
 
 .location-form {
@@ -60,50 +60,119 @@ h2 {
 }
 
 .location-search {
+    background-color: #2C3E50;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
     display: flex;
-    gap: 10px;
     flex-direction: column;
-    color: white;
+    gap: 15px;
+    margin-top: 10px;
+    animation: fadeIn 0.3s ease-in-out;
+    color: #E0E3EB;
 }
 
 .location-search input {
     color: inherit;
+    margin-bottom: 10px;
+    width: 100%;
 }
 
-.location-input {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
+.location-component{
+    background-color: #333333;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    color: #E0E3EB;
     border: 1px solid #555;
-    border-radius: 8px;
-    background-color: #222;
+    transition: background 0.3s ease-in-out;
+}
+
+.location-component button{
+    background: linear-gradient(135deg, #4a90e2, #0077b6);
     color: white;
-    outline: none;
-    transition: all 0.3s ease;
-}
-
-.location-input:focus {
-    border-color: #FFD93D;
-    box-shadow: 0 0 10px rgba(255, 217, 61, 0.5);
-}
-
-.submit-button, .unit-toggle-button {
-    width: 100%;
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    background: linear-gradient(135deg, #FFD93D, #FFCC70);
+    padding: 10px;
     border: none;
-    border-radius: 8px;
+    border-radius: 6px;
+    font-size: 1rem;
     cursor: pointer;
-    transition: all 0.3s ease;
-    color: #222;
+    transition: background 0.3s;
+    width: 100%;
 }
 
-.submit-button:hover, .unit-toggle-button:hover {
-    transform: scale(1.05);
-    box-shadow: 0 4px 10px rgba(255, 217, 61, 0.4);
+.settings-page {
+    background-color: #2C3E50;
+    padding: 15px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    margin-top: 10px;
+    animation: fadeIn 0.3s ease-in-out;
 }
+
+.change-metrics, .clear-storage{
+    background-color: #333333;
+    padding: 15px;
+    border-radius: 8px;
+    box-shadow: 0px 2px 5px rgba(0, 0, 0, 0.1);
+    color: #E0E3EB;
+    border: 1px solid #555;
+    transition: background 0.3s ease-in-out;
+}
+
+.settings-page h4{
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #E0E3EB;
+    margin-bottom: 10px;
+}
+
+.change-metrics input[type="radio"] {
+    margin-right: 8px;
+    accent-color: #5DADE2;
+}
+
+.change-metrics label {
+    font-size: 1rem;
+    color: #dcdcdc;
+    cursor: pointer;
+    transition: color 0.2s ease-in-out;
+}
+
+.change-metrics label:hover {
+    color: #5DADE2;
+}
+
+.clear-storage button {
+    background: linear-gradient(135deg, #4E89AE, #5DADE2);
+    color: #E0E3EB;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
+.toggle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.caret-icon {
+    position: absolute;
+    right: 2em;
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon180 {
+    transform: rotate(180deg);
+}
+
 
 /* Media queries for desktop */
 @media screen and (min-width: 600px) {
