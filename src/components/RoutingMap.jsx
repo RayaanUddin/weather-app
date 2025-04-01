@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, LoadScript, DirectionsRenderer } from "@react-google-maps/api";
 import './styles/RoutingMap5.css'
-
+import './styles/App.css'
 const API_KEY = import.meta.env.VITE_API_KEY; 
 
 const defaultCenter = { lat: 37.7749, lng: -122.4194 }; 
