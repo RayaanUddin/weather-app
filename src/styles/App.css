@@ -163,6 +163,25 @@ body {
   background: transparent;
 }
 
+.upper {
+  text-transform: uppercase;
+}
+
+.flash-red {
+  animation: flash-red 1s;
+}
+
+@keyframes flash-red {
+  0% { background-color: rgba(133, 0, 0, 0.59); }
+  100% { background-color: initial; }
+}
+
+.error-message {
+  color: red;
+  font-size: 1rem;
+  margin: 5px;
+}
+
 /* Media queries for desktop */
 @media screen and (min-width: 1000px) {
   .grid-container {
@@ -183,23 +202,4 @@ body {
   .hourly-card {
     max-height: 20vh;
   }
-}
-
-.upper {
-  text-transform: uppercase;
-}
-
-.flash-red {
-  animation: flash-red 1s;
-}
-
-@keyframes flash-red {
-  0% { background-color: rgba(133, 0, 0, 0.59); }
-  100% { background-color: initial; }
-}
-
-.error-message {
-  color: red;
-  font-size: 1rem;
-  margin: 5px;
 }

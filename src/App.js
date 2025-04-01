@@ -44,8 +44,8 @@ function App() {
     return now - timestamp < CACHE_EXPIRY_HOURS * 60 * 60 * 1000; // Check if cache is still valid
   };
 
-  //Passed as a prop into sidebar and WeatherOverview. Settings inside sidebar toggles this, WeatherOverview will read these states.
-  const [selectedMetricsToDisplay, setSelectedMetricsToDisplay] = useState({
+  // Passed as a prop into sidebar and WeatherOverview. Settings inside sidebar toggles this, WeatherOverview will read these states.
+  const [selectedMetricsToDisplay, setSelectedMetricsToDisplay] = useState(JSON.parse(localStorage.getItem("metrics")) || {
     "Gust": false, "Precipitation": true, "Sunrise": false,
     "Air Pressure": true, "Sunset": false, "Feels Like": false,
     "Clouds": false, "Wind Speed": true, "Humidity": true,

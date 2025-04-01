@@ -26,18 +26,6 @@
     width: 100%;
 }
 
-.sidebar button {
-    padding: 12px;
-    font-size: 16px;
-    font-weight: bold;
-    background: linear-gradient(135deg, #4E89AE, #5DADE2);
-    border: none;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: #E0E3EB;
-}
-
 h2 {
     text-align: center;
     font-size: 22px;
@@ -53,11 +41,31 @@ h2 {
     z-index: 0;
 }
 
+.previous-searches-title {
+    font-size: 1.1rem;
+    font-weight: bold;
+    color: #E0E3EB;
+    margin-bottom: 10px;
+}
+
 .previous-locations {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
 }
+
+.loading-button {
+    background-color: #4E89AE;
+    color: #E0E3EB;
+    padding: 10px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.3s;
+    width: 100%;
+}
+
 
 .location-search {
     background-color: #2C3E50;
@@ -129,20 +137,24 @@ h2 {
     margin-bottom: 10px;
 }
 
-.change-metrics input[type="radio"], .display-meters form div input[type="checkbox"]{
+.change-metrics input[type="radio"], .display-meters form div input[type="checkbox"] {
     margin-right: 8px;
     accent-color: #5DADE2;
 }
 
-.change-metrics label, .display-meters form div label{
+.change-metrics label, .display-meters form div label {
     font-size: 1rem;
     color: #dcdcdc;
     cursor: pointer;
     transition: color 0.2s ease-in-out;
 }
 
-.change-metrics label:hover, .display-meters form div label:hover{
+.change-metrics label:hover, .display-meters form div label:hover {
     color: #5DADE2;
+}
+
+.display-meters button {
+    width: 100%;
 }
 
 .clear-storage button {
@@ -157,8 +169,38 @@ h2 {
     width: 100%;
 }
 
+.sidebar .toggle-button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0.8em;
+    font-size: 16px;
+    font-weight: bold;
+    background: linear-gradient(135deg, #4E89AE, #5DADE2);
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    color: #E0E3EB;
+}
+
+.caret-icon {
+    position: absolute;
+    right: 2em;
+    transition: transform 0.2s ease-in-out;
+}
+
+.icon180 {
+    transform: rotate(180deg);
+}
+
 .display-meters form button {
     margin-top: 10px;
+}
+
+.settings-page .toggle-button {
+    width: 100%;
+    padding: 0.4em;
 }
 
 /* Media queries for desktop */

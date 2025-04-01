@@ -3,8 +3,10 @@ import React from "react";
 import "../styles/LocationWeather.css";
 
 const LocationWeather = ({forecast, unit, onClick}) => {
+  const isNight = forecast.weather[0].icon.includes('n');
+
   return (
-    <button onClick={onClick} className={`location-weather`}>
+    <button onClick={onClick} className={`location-weather ${isNight ? 'night-background' : 'day-background'}`}>
       <h1>{Math.round(unitConversion.convertTemperature(forecast.main.temp, unit))+unitConversion.getUnitSymbol_Temperature(unit)}</h1>
       <img src={require(`../assets/weather-icons/${forecast.weather[0].icon}.png`)} alt="weather icon"/>
       <p className="desc">{forecast.weather[0].description}</p>
