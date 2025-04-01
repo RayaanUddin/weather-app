@@ -51,11 +51,6 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
     }
   }, [searchHistory]);
 
-  const clearStorage = () => {
-    localStorage.clear();
-    window.location.reload();
-  };
-
   return (
     <div className="container">
       <button onClick={() => setShowLocationSearch(!showLocationSearch)} className="toggle-button">

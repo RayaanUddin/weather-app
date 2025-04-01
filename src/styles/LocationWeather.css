@@ -1,18 +1,51 @@
 .location-weather {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    grid-template-rows: 3fr 1fr;
-    border-radius: 6px;
-    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: space-between;
+    position: relative;
+    width: 100%;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    transition: transform 0.2s ease-in-out;
+    overflow: hidden;
+    color: white;
+    text-align: left;
+
+    h1 {
+        font-size: 3em;
+        font-weight: bold;
+        margin: 0;
+        position: absolute;
+        top: 10px;
+        left: 15px;
+    }
+
     img {
-        grid-column: span 1;
-        grid-row: span 3;
-        max-height: 100%;
-        max-width: 50%;
+        position: absolute;
+        right: 10px;
+        top: 10px;
+        width: 80px;
+        height: 80px;
+        object-fit: contain;
     }
+
     .desc {
-        grid-column: span 1;
         font-size: 1rem;
-        color: inherit;
+        text-transform: capitalize;
+        margin-top: 60px;
+        padding-left: 10px;
     }
+
+    .location {
+        font-size: 0.9rem;
+        font-weight: bold;
+        padding-left: 10px;
+    }
+}
+
+.location-weather:hover {
+    transform: scale(1.03);
 }
