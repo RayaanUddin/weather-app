@@ -31,6 +31,8 @@ const handleCheckboxChange = (e) => {
       [name]: checked,
   }));
 };
+
+// changes the map size based on the size of the screen, used for desktop and mobile
 const [mapSize, setMapSize] = useState({
   width: window.innerWidth < 500 ? "80vw" : "72vw",
   height: window.innerWidth < 500 ? "450px" : "60vh",
