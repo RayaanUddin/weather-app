@@ -9,9 +9,12 @@ This React application fetches weather forecasts and displays weather conditions
 - Hourly forecast visualization
 - Provides gear recommendations based on weather conditions
 - Caches data locally for performance improvement
-- Uses Leaflet for map display
+- Displays map with routing, with option to have multiple overlays (e.g. wind direction, humidity,...)
 - Supports location retrieval via Geolocation API
-- Sidebar menu for unit selection and location input
+- Switch between unit types (Metric & Imperial)
+- Customise and select between multiple metric (e.g. pressure, gust,...) options to display on main page.
+- Clearing data with confirmation
+- Visual night and day difference
 
 ---
 
