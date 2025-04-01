@@ -22,7 +22,8 @@ function RoutingMap({isNightMode}) {
     wind: false,
     temperature: false,
 });
-
+// handles the filtering options for what the user wants
+// can choose routes with no rain or more shadier areas  
 const handleCheckboxChange = (e) => {
   const { name, checked } = e.target;
   setWeatherConditions((prev) => ({
@@ -36,6 +37,7 @@ const [mapSize, setMapSize] = useState({
   marginRight:window.innerWidth < 500 ? "3vw":"120px"
 });
 
+// used for display on mobile devices using media queries
 useEffect(() => {
   const handleResize = () => {
     setMapSize({
@@ -50,7 +52,7 @@ useEffect(() => {
 }, []);
 
 
-
+// gets the weather of the current location the user is in, if they start from there
 const getWeather = async (lat, lon) => {
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -69,11 +71,12 @@ const getWeather = async (lat, lon) => {
   }
 };
 
-
+// sends the route to local storage for the user to see on the main page
 const confirmRoute = () => {
   localStorage.setItem("route", JSON.stringify(routeJSON));
 }
 
+// gets new weather based on the location they are in
 useEffect(() => {
   if ((!start && !currentLocation) || !end) {
     return;
@@ -103,6 +106,9 @@ useEffect(() => {
 
 },[start,location])
 
+
+// this creates the directions based on the start and end locations 
+// and checks all the viable routes based on the options picked by the user
 const getRoute = () => {
   if (!window.google || !window.google.maps) {
       alert("Google Maps API not loaded.");
@@ -168,7 +174,7 @@ const getRoute = () => {
   );
 };
 
-  
+// gets the current location of user
 useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -199,6 +205,7 @@ useEffect(() => {
               <div className="images">
                 <img className="location-icon" src="src/location_on.png" alt="feger" />
               </div>
+              
               <div className="maps">
                 <input
                           type="text"
