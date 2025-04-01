@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, LoadScript, DirectionsRenderer } from "@react-google-maps/api";
-import './styles/RoutingMap5.css'
-import './styles/App.css'
+import './RoutingMap5.css'
+
 const API_KEY = import.meta.env.VITE_API_KEY; 
 
 const defaultCenter = { lat: 37.7749, lng: -122.4194 }; 
@@ -14,16 +14,21 @@ function RoutingMap({isNightMode}) {
   const [bestRoute,setBestRoute] = useState(null)
   const [currentLocationWeather,setCurrentLocationWeather] = useState(null)
   const [loadingDirections, setLoadingDirections] = useState(false);
-
+  const [loadMap,setLoadMap] = useState(false)
   const [routeJSON,setRouteJSON] = useState(null)
+  const [errorMap,setErrorMap] = useState(false)
+  const [errorLocation,setErrorLocation] = useState(false)
+  const [errorCurrentLocation,setErrorCurrentLocation] = useState(false)
+  const [errorWeather,setErrorWeather] = useState(false)
+  const [errorRoute,setErrorRoute] = useState(false)
+  const [loadingMap,setLoadingMap] = useState(true)
 
   const [weatherConditions, setWeatherConditions] = useState({
     rain: false,
     wind: false,
     temperature: false,
 });
-// handles the filtering options for what the user wants
-// can choose routes with no rain or more shadier areas  
+
 const handleCheckboxChange = (e) => {
   const { name, checked } = e.target;
   setWeatherConditions((prev) => ({
@@ -31,15 +36,12 @@ const handleCheckboxChange = (e) => {
       [name]: checked,
   }));
 };
-
-// changes the map size based on the size of the screen, used for desktop and mobile
 const [mapSize, setMapSize] = useState({
   width: window.innerWidth < 500 ? "80vw" : "72vw",
   height: window.innerWidth < 500 ? "450px" : "60vh",
   marginRight:window.innerWidth < 500 ? "3vw":"120px"
 });
 
-// used for display on mobile devices using media queries
 useEffect(() => {
   const handleResize = () => {
     setMapSize({
@@ -54,7 +56,7 @@ useEffect(() => {
 }, []);
 
 
-// gets the weather of the current location the user is in, if they start from there
+
 const getWeather = async (lat, lon) => {
   const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
   const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
@@ -69,16 +71,16 @@ const getWeather = async (lat, lon) => {
     })
   } catch (error) {
       console.error("Weather API Error:", error);
+      setErrorWeather(true)
       return null;
   }
 };
 
-// sends the route to local storage for the user to see on the main page
+
 const confirmRoute = () => {
   localStorage.setItem("route", JSON.stringify(routeJSON));
 }
 
-// gets new weather based on the location they are in
 useEffect(() => {
   if ((!start && !currentLocation) || !end) {
     return;
@@ -100,6 +102,7 @@ useEffect(() => {
         };
     } catch (error) {
         console.error("Weather API Error:", error);
+        setErrorWeather(true)
         return null;
     }
   };
@@ -108,21 +111,27 @@ useEffect(() => {
 
 },[start,location])
 
-
-// this creates the directions based on the start and end locations 
-// and checks all the viable routes based on the options picked by the user
 const getRoute = () => {
   if (!window.google || !window.google.maps) {
-      alert("Google Maps API not loaded.");
+      setErrorMap(true)
+      // alert("Google Maps API not loaded.");
       return;
   }
   if ((!start && !currentLocation) || !end) {
-      alert("Please provide both start and destination locations.");
+      setErrorLocation(true)
+      // alert("Please provide both start and destination locations.");
       return;
   }
 
   setLoadingDirections(true);
 
+  if (window.google && window.google.maps) {
+    setErrorMap(false)
+    setLoadingMap(prevState => !prevState)
+  }
+  if ((start || currentLocation) && end) {
+    setErrorLocation(false)
+  }
   const directionsService = new google.maps.DirectionsService();
   directionsService.route(
       {
@@ -170,13 +179,14 @@ const getRoute = () => {
 
               setDirections(result);
           } else {
+              setErrorRoute(true)
               alert("Could not find route.");
           }
       }
   );
 };
 
-// gets the current location of user
+  
 useEffect(() => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition(
@@ -188,14 +198,75 @@ useEffect(() => {
             lng: position.coords.longitude,
           });
         },
-        (error) => console.error("Error getting location:", error)
+        (error) => {
+          console.error("Error getting location:", error)
+          setErrorCurrentLocation(true)
+
+        }
       );
     }
   }, []);
 
 
   return (
-    <div style={isNightMode ? "night-background":"day-background"}>
+    <div style={isNightMode ? "night-background" :"day-background"}>
+      {loadingMap && <div className="popup-overlay">
+          <div className="popup">
+            <h2>Loading Map..  </h2>
+            
+          </div>
+        </div>
+      }
+
+      {errorWeather && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>The weather has not loaded,there may be no weather available for this location, please can you pick a new route otherwise refresh the page  </h2>
+          <button onClick={() => setErrorWeather(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      {errorRoute && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>This route is not available, please can you try a route that is more viable  </h2>
+          <button onClick={() => setErrorCurrentLocation(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      
+
+
+      
+      {errorCurrentLocation && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>Your current location has not loaded properly, please close this popup and try again  </h2>
+          <button onClick={() => setErrorCurrentLocation(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      {errorMap && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>Your google maps has not loaded properly, please close this popup and try again  </h2>
+          <button onClick={() => setErrorMap(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      {errorLocation && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+            {(!start && !currentLocation) ? <div>
+              <h2>Your start location is empty. Please close the popup, refresh the page and add one</h2>
+              <button onClick={() => setErrorLocation(false)}>Close</button>
+            </div>:<div>
+              <h2>Your end location is empty. Please close the popup, refresh the page and add one </h2>
+              <button onClick={() => setErrorLocation(false)}>Close</button>
+            </div> }
+          </div>
+        </div>
+      </div> }
        <div className="menu">
           <img className="menuImgs" src="https://s3-alpha-sig.figma.com/img/8119/7a04/8b094d76f25fbd27d9b66475657af1e0?Expires=1743984000&Key-Pair-Id=APKAQ4GOSFWCW27IBOMQ&Signature=R5ISqwcRTrWBN4NYEP-3t9Utdon2-OE-u8-MbJuEXZbqPSOpq1MYJtvFcNA7qSCUviIVs3lE3OucXfh5xgSvTRuy5WjxQtLDQwcJdggVGqsYZzeRCEkX6AZjNfyscQh-WU8WtCgkwhXyJ2vAy89BlvC-nBsHgsTB5i518gNQ42LhZNpKP4s~EAVyC3ujvj7aj87xc2~9wlvpUjp0B3Affx3Ohtw9e2cvyp5cXH1s0A2Jmq0RUYj0U7LR72iCls72cy0zMOTy1O7gVmdbYW1fsJlVHhH6QaI7FW8TshcaA9gR874pQyFIT~~aR~slbV61lCh0pa7AH5vXbMw7~G4-ew__" alt="" />
           <h3 className="menuName">Menu</h3>
@@ -207,7 +278,6 @@ useEffect(() => {
               <div className="images">
                 <img className="location-icon" src="src/location_on.png" alt="feger" />
               </div>
-              
               <div className="maps">
                 <input
                           type="text"
