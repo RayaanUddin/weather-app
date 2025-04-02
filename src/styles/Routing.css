@@ -1,35 +1,52 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
 .filters label {
-    color: #000;
+    color: white;
     font-family: 'Inter', sans-serif;
     font-size: 24px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
     display: flex;
+    position: relative;
+    bottom: 2px;
     
 }
 .filters {
-    margin-top: 10px;
+    display: flex;
+    flex-direction: column;
+ 
     position: relative;
-    right: 150px;
+    top:30px;
+    margin: 0 auto;
+    
 }
 .maps {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    background-color: #333333;
+    padding: 15px;
+    border-radius:8px;
+    color: #E0E3EB;
+    border: 1px solid #555;
+    transition: background 0.3s ease-in-out;
 }
-.maps input {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+.buttonContainer {
+    width: 100%;
+    margin: 0 auto;
+    
 }
 .searchButton {
-    width: 100px;
-    margin-left: 15px;
+    width: 100%;
+    
     position: relative;
-    right:100px;
+    right:20px;
+    background: linear-gradient(135deg, #4E89AE, #5DADE2);
+    margin: 0 auto;
+    left: 0.05%;
+    top:15%;
+
 }
 
 body {
@@ -62,57 +79,51 @@ label #text {
 }
 
 .maps input {
-    width: 330px;
+  
     height: 24px;
+    width: 100%;
     flex-shrink: 0;
     color: rgba(0, 0, 0, 0.40);
     font-family: Inter;
-    font-size: 28px;
+    font-size: 15px;
     font-style: normal;
     font-weight: 400;
     line-height: normal;
-    padding: 10px;
+    padding: 5px;
+    position: relative;
     }
 
 .location-icon {
     position: relative;
-    top:20px;
+
 }
-input {
+
+.maps input::placeholder {
+    color: inherit
+}
+
+.maps input:first-child {
+    margin-bottom: 15px;
+}
+.maps input {
     margin-right: 10px;
-    border: none; /* Remove all borders */
-    border-bottom: 2px solid white; /* Keep only the bottom border */
-    outline: none; /* Remove focus outline */
-    padding: 5px; /* Optional: Adds spacing inside input */
+    border: none; 
+    border-bottom: 2px solid white; 
+    outline: none;
+    padding: 5px; 
     background: transparent;
+    
+    color: inherit
 }
-.box {
-    width: 1206px;
-    height: 177px;
-    flex-shrink: 0;
-    border-radius: 34px;
-    border: 1px solid #000;
-    background: linear-gradient(139deg, rgba(255, 255, 255, 0.20) 7.88%, rgba(255, 255, 255, 0.40) 92.12%);
-    box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
-    backdrop-filter: blur(2.5px);
-    /* filter: blur(2.5px); */
-}
+
 
 .stuff {
     display: flex;
+    flex-direction: column;
 }
 
 
-button {
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
+
 
   .buttonContainer {
     display: flex;
@@ -121,7 +132,7 @@ button {
     height: 15vh; /* Full viewport height */
   }
   
-  button {
+  .buttons {
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
     padding: 10px 20px;
@@ -130,7 +141,7 @@ button {
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    width: 150px;
+    width: 9.375rem;
   }
   
   button:hover {
@@ -141,47 +152,49 @@ button {
     display: flex;
     justify-content: center; /* Center horizontally */
     align-items: center;     /* Center vertically */
-    height: 15vh;           /* Full viewport height */
+    height: 48vh;     
+         
     padding: 20px;
-    border-radius: 34px;
+    border-radius: 10px;
     border: 1px solid #000;
-    background: linear-gradient(139deg, rgba(255, 255, 255, 0.20) 7.88%, rgba(255, 255, 255, 0.40) 92.12%);
+    background: #2C3E50;
     box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
     flex-direction: column;
-    width: 750px;
-    margin-left: 360px;
+    
+    
     margin-bottom: 20px;
 }
 
 /* Centralizing content inside .stuff */
 .stuff {
     display: flex;
-    flex-direction: row;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
-    width: 200%;
-    max-width: 600px; /* Optional: Set a max-width to prevent stretching */
+    width: 100%;
+  
+    
 }
 
 .mapContainer {
-    width: 1206px;
-    height: 519px;
+    
+    height: 34.438rem;
     flex-shrink: 0;
-    border-radius: 34px;
+    border-radius: 10px;
     border: 1px solid #000;
 
-    background: linear-gradient(139deg, rgba(255, 255, 255, 0.20) 7.88%, rgba(255, 255, 255, 0.40) 92.12%);
+    background: #2C3E50;
 
     box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
     backdrop-filter: blur(2.5px);
-    margin-left: 160px;
+    
 }
 
 .mapGoogle {
-    width: 1134px;
-    height: 368px;
+    width: 100%;
+    height: 23rem;
     flex-shrink: 0;
-    margin-left: 20px;
+    
     margin-top: 20px;
 }
 
@@ -189,28 +202,18 @@ input[type="checkbox"] {
     
     margin-bottom: 10px;
     border-radius: 50%;        /* Make it circular */
-    border: 2px solid #007bff;/* Border color */
-    /* Background color */
+    border: 2px solid white;/* Border color */
+    margin-right:12px ;
 
 }
 
-.boxContainer {
-    display: flex;
-    align-items: space-between;
-    width: 1165px;
-    margin-left: 160px;
-}
 
-.maps input {
-    width: 428px;
-    
-}
-.maps {
-    margin-right: 300px;
-}
+
 .inputBox {
     display: flex;
-    margin-right: 150px;
+    flex-direction: column;
+    margin: 0 auto;
+    
 }
 .menuName {
     color: #000;
@@ -229,8 +232,8 @@ input[type="checkbox"] {
 }
 
 .menuImgs {
-    width: 53px;
-    height: 53px;
+    width: 3.313rem;
+    height: 3.313rem;
     flex-shrink: 0;
     aspect-ratio: 1/1;
     display: flex;
@@ -239,12 +242,11 @@ input[type="checkbox"] {
 }
 .stuffImgs {
     display: flex;
+   
     flex-direction: row;
+    position: relative;
+    
 }
-
-/* .mapGoogle {
-    width: 900px;
-} */
 
 .confirmation {
     display: flex;
@@ -257,21 +259,26 @@ input[type="checkbox"] {
     font-weight: 400;
     line-height: normal;
 }
-
+.location-icon {
+    margin:0 auto;
+}
 .disclaimer {
-    right: 2vw;
+    right: 4vw;
     font-size: 13px;
     position: relative;
-    bottom: 13px;
+    color: #E0E3EB;
+    top:2vh;
+    
 }
 .confirmRoute {
     position: relative;
-    width: 7vw;
+    
     height: 5vh;
-    top: 1.5vh;
-    right: 3vw;
+    top: 3vh;
+    right: 2vw;
     display: flex;
     justify-content: center;
+    background: linear-gradient(135deg, #4E89AE, #5DADE2);
 }
 
 .mapContainer {
@@ -315,12 +322,7 @@ input[type="checkbox"] {
         
         
     }
-    .inputBox {
-        display: flex;
-        flex-direction: column;
-        position: relative;
-        left: 200px;
-    }
+    
     .stuff {
         display: flex;
         flex-direction: column;
@@ -332,20 +334,8 @@ input[type="checkbox"] {
         flex-direction: row;
         padding: 20px;
     }
-    .maps input {
-        font-size: 20px;
-        width:302px;
-        position: relative;
-        top:25px;
-    }
-    .filters {
-        display: flex;
-        position: relative;
-        left: 150px;
-        flex-direction: column;
-        margin-top: 40px;
-        
-    }
+    
+    
     .images {
         padding: 10px;
     }
@@ -354,11 +344,7 @@ input[type="checkbox"] {
         right: 20%;
         bottom:10%;
     }
-    .mapContainer {
-        margin-left: 0;
-        width: 460px;
-        height: 600px;
-    }
+    
     .mapGoogle {
         width: 434px;
         height: 368px;
