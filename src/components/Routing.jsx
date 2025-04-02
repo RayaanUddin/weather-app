@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader } from "@react-google-maps/api";
 import "../styles/Routing.css";
+import { locationCoords } from "../api/location";
 
 const defaultCenter = { lat: 37.7749, lng: -122.4194 }; 
 
@@ -58,44 +59,25 @@ useEffect(() => {
 
 
 
-const getWeather = async (lat, lon) => {
-  const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
-  const url = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}`;
-  
-  try {
-      const response = await fetch(url);
-      const data = await response.json();
-      setCurrentLocationWeather( {
-        condition: data.weather[0].main,  // Example: "Rain", "Clear", "Snow"
-        windSpeed: data.wind.speed,       // Wind speed in m/s
-        temperature: data.main.temp,      // Temperature in °C
-    })
-  } catch (error) {
-      console.error("Weather API Error:", error);
-      setErrorWeather(true)
-      return null;
-  }
-};
 
 
 const confirmRoute = () => {
   localStorage.setItem("route", JSON.stringify(routeJSON));
+  setDirections(null)
 }
 
-useEffect(() => {
-  if ((!start && !currentLocation) || !end) {
-    return;
-  }
 
-  const getWeather = async (lat, lon) => {
+const getWeather = async () => {
 
 
-    const apiKey = import.meta.env.VITE_WEATHER_API_KEY;
+    const apiKey = process.env.REACT_APP_WEATHER_API_KEY;
+
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${start || currentLocation}&appid=${apiKey}`;
     
     try {
         const response = await fetch(url);
         const data = await response.json();
+        console.log(data)
         return {
             condition: data.weather[0].main,  // Example: "Rain", "Clear", "Snow"
             windSpeed: data.wind.speed,       // Wind speed in m/s
@@ -108,9 +90,6 @@ useEffect(() => {
     }
   };
 
-  getWeather()
-
-},[start,currentLocation])
 
 const getRoute = () => {
   if (!window.google || !window.google.maps) {
@@ -148,41 +127,56 @@ const getRoute = () => {
           if (status === window.google.maps.DirectionsStatus.OK) {
               let bestRoute = null;
               let bestWeatherScore = Infinity;
-
+  
               for (let index = 0; index < result.routes.length; index++) {
                   const route = result.routes[index];
-                  const midPoint = route.overview_path[Math.floor(route.overview_path.length / 2)];
-                  const weatherCondition = await getWeather(midPoint.lat(), midPoint.lng());
+                  const pathPoints = route.overview_path;
+  
+                  // Sample multiple points along the route
+                  const sampleCount = 5; // Number of points to check
+                  const sampledPoints = [];
+                  const firstPoints = pathPoints.slice(0, 2); 
+                  sampledPoints.push(...firstPoints);
 
-                  let score = 0;
-                  if (weatherConditions.rain && weatherCondition.condition === "Rain") score += 2;
-                  if (weatherConditions.wind && weatherCondition.windSpeed > 10) score += 1; 
-                  if (weatherConditions.temperature && (weatherCondition.temperature < 0 || weatherCondition.temperature > 35)) score += 2; // Extreme temp
-
-                  if (score < bestWeatherScore) {
-                      bestWeatherScore = score;
-                      bestRoute = route; 
+                  for (let i = 1; i <= sampleCount; i++) {
+                      const pointIndex = Math.floor((i / (sampleCount + 1)) * pathPoints.length);
+                      sampledPoints.push(pathPoints[pointIndex]);
+                  }
+                  const lastPoints = pathPoints.slice(-2); 
+                  sampledPoints.push(...lastPoints);
+                  let totalScore = 0;
+                  for (const point of sampledPoints) {
+                      const weatherCondition = await getWeather(point.lat(), point.lng());
+                      
+                      let score = 0;
+                      if (weatherConditions.rain && weatherCondition.condition === "Rain") score += 2;
+                      if (weatherConditions.wind && weatherCondition.windSpeed > 10) score += 1;
+                      if (weatherConditions.temperature && (weatherCondition.temperature < 0 || weatherCondition.temperature > 35)) score += 2;
+  
+                      totalScore += score;
+                  }
+  
+                  const avgScore = totalScore / sampleCount; // Average weather score
+  
+                  if (avgScore < bestWeatherScore) {
+                      bestWeatherScore = avgScore;
+                      bestRoute = route;
                   }
               }
-
+  
               if (bestRoute) {
-                  console.log(currentLocation)
-                  setBestRoute(bestRoute); 
-                  const routeJSONs = {
-                    origin: start || currentLocation,
-                    destination:end
-                  }
-
-                  setRouteJSON(routeJSONs)
-                  
-                  
-                  console.log(bestRoute)
-
+                  console.log(currentLocation);
+                  setBestRoute(bestRoute);
+                  setRouteJSON({
+                      origin: start || currentLocation,
+                      destination: end
+                  });
+                  console.log(bestRoute);
               }
-
+  
               setDirections(result);
           } else {
-              setErrorRoute(true)
+              setErrorRoute(true);
               alert("Could not find route.");
           }
       }
@@ -213,63 +207,7 @@ useEffect(() => {
 
   return (
     <div>
-      {!isLoaded && <div className="popup-overlay">
-          <div className="popup">
-            <h2>Loading Map..  </h2>
-            
-          </div>
-        </div>
-      }
-
-      {errorWeather && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>The weather has not loaded,there may be no weather available for this location, please can you pick a new route otherwise refresh the page  </h2>
-          <button  className="buttons" onClick={() => setErrorWeather(false)}>Close</button>
-          </div>
-        </div>
-      </div> }
-      {errorRoute && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>This route is not available, please can you try a route that is more viable  </h2>
-          <button className="buttons"onClick={() => setErrorCurrentLocation(false)}>Close</button>
-          </div>
-        </div>
-      </div> }
       
-
-
-      
-      {errorCurrentLocation && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>Your current location has not loaded properly, please close this popup and try again  </h2>
-          <button className="buttons" onClick={() => setErrorCurrentLocation(false)}>Close</button>
-          </div>
-        </div>
-      </div> }
-      {errorMap && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>Your google maps has not loaded properly, please close this popup and try again  </h2>
-          <button className="buttons" onClick={() => setErrorMap(false)}>Close</button>
-          </div>
-        </div>
-      </div> }
-      {errorLocation && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-            {(!start && !currentLocation) ? <div>
-              <h2>Your start location is empty. Please close the popup, refresh the page and add one</h2>
-              <button className="buttons" onClick={() => setErrorLocation(false)}>Close</button>
-            </div>:<div>
-              <h2>Your end location is empty. Please close the popup, refresh the page and add one </h2>
-              <button className="buttons" onClick={() => setErrorLocation(false)}>Close</button>
-            </div> }
-          </div>
-        </div>
-      </div> }
        
       <div className="boxContainer">
         <div className="stuff">
@@ -332,6 +270,14 @@ useEffect(() => {
        
       </div>
       <div className="mapContainer">
+      {!isLoaded && <div className="popup-overlay">
+          <div className="popup">
+            <h2>Loading Map..  </h2>
+            
+          </div>
+        </div>
+      }
+      
       {loadingDirections && (
         <div className="popup-overlay">
           <div className="popup">
@@ -339,6 +285,54 @@ useEffect(() => {
           </div>
         </div>
       )}
+      
+      {errorCurrentLocation && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>Your current location has not loaded properly, please close this popup and try again  </h2>
+          <button className="buttons" onClick={() => setErrorCurrentLocation(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      {errorMap && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>Your google maps has not loaded properly, please close this popup and try again  </h2>
+          <button className="buttons" onClick={() => setErrorMap(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      
+      {errorWeather && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>The weather has not loaded,there may be no weather available for this location, please can you pick a new route otherwise refresh the page  </h2>
+          <button  className="buttons" onClick={() => setErrorWeather(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      {errorRoute && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>This route is not available, please can you try a route that is more viable  </h2>
+          <button className="buttons"onClick={() => setErrorCurrentLocation(false)}>Close</button>
+          </div>
+        </div>
+      </div> }
+      
+      {errorLocation && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+            {(!start && !currentLocation) ? <div>
+              <h2>Your start location is empty. Please close the popup, refresh the page and add one</h2>
+              <button className="buttons" onClick={() => setErrorLocation(false)}>Close</button>
+            </div>:<div>
+              <h2>Your end location is empty. Please close the popup, refresh the page and add one </h2>
+              <button className="buttons" onClick={() => setErrorLocation(false)}>Close</button>
+            </div> }
+          </div>
+        </div>
+      </div> }
        
       <div className="mapGoogle">
               {

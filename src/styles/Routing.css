@@ -75,7 +75,8 @@ label #text {
 .maps {
     display: flex;
     flex-direction: column;
-    width: 350px;
+    width: 100%;
+ 
 }
 
 .maps input {
@@ -120,6 +121,7 @@ label #text {
 .stuff {
     display: flex;
     flex-direction: column;
+    width: 100%;
 }
 
 
@@ -251,6 +253,7 @@ input[type="checkbox"] {
 }
 .stuffImgs {
     display: flex;
+    width: 100%;
    
     flex-direction: row;
     position: relative;
