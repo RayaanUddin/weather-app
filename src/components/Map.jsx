@@ -101,7 +101,7 @@ const Map = ({ lat, lon,route }) => {
 
   //   getRoute();
     console.log(route)
-  },[isLoaded])
+  },[isLoaded,route])
 
 
 
