@@ -76,7 +76,7 @@ export const getUnitSymbol_Pressure = (unit) => {
  * @param {UnitType} unit Unit type
  * @returns {number} Converted pressure
  */
-/*export const convertPressure = (pressure:number, unit:UnitType):number => {*/
+/*export const convertPressure = (pressure:number, unit:UnitType) => {*/
 export const convertPressure = (pressure, unit) => {
   if (unit === UnitType.METRIC) {
     return pressure;
@@ -93,7 +93,7 @@ export const convertPressure = (pressure, unit) => {
  * @param {number} timestamp Unix timestamp
  * @returns {number} Converted time (24h time)
  */
-/*export const convertPressure = (pressure:number, unit:UnitType):number => {*/
+/*export const convertTimestampToTime = (timestamp:string) => {*/
 export const convertTimestampToTime = (timestamp) => {
   const date = new Date(timestamp * 1000);
   let hours = date.getHours();
