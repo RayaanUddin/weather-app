@@ -11,9 +11,12 @@ import { weatherData } from "./utils/weatherUtil";
 import * as unitConversion from "./utils/unitConversion";
 import { getCurrentCoords } from "./utils/getCurrentCoords";
 import Header from "./components/Header";
-
+import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader } from "@react-google-maps/api";
+const googleMapsKey = process.env.REACT_APP_GOOGLE_API_KEY;
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
+
+
 
 function isNight(lat, lon, date) {
   const now = new Date();
@@ -36,6 +39,9 @@ function App() {
   );
   const [isNightMode, setIsNightMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: googleMapsKey,
+  });
 
   const isCacheValid = (storedData) => {
     if (!storedData) return false;
@@ -50,6 +56,14 @@ function App() {
     "Air Pressure": true, "Sunset": false, "Feels Like": false,
     "Clouds": false, "Wind Speed": true, "Humidity": true,
   });
+
+ 
+  const [route,setRoute] = useState(JSON.parse(localStorage.getItem("route")) || 
+    {
+      origin:coords,
+      destination:null 
+    }   
+  )
 
   // Get coordinates on initial load
   useEffect(() => {
@@ -96,11 +110,13 @@ function App() {
     console.log(forecastData);
   }, [coords]);
 
+ 
+
   return (
     <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
       <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} setCoords={setCoords}/>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} />
+        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} setRoute={setRoute} />
       </div>
       <div className="grid-container">
         <div className="weather-card">
@@ -122,7 +138,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <Map op="TA2" lat={coords.lat} lon={coords.lon} />
+              <Map op="TA2" lat={coords.lat} lon={coords.lon} route={route} />
             )
           )}
         </div>
