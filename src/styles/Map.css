@@ -4,8 +4,8 @@
 
 .settings-button {
     position: absolute;
-    top: 5px;
-    right: 5px;
+    top: 20px;
+    right: 20px;
     z-index: 1000;
     background: white;
     border: none;
@@ -54,3 +54,13 @@
 .settings-panel input {
     margin-right: 5px;
 }
+.buttons {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }

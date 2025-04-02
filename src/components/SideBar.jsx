@@ -7,7 +7,7 @@ import ConfirmModal from "./ConfirmModal";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Routing from "./Routing"
-const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoords, unit, setUnit, toggleMenu,setRoute }) => {
+const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoords, unit, setUnit, toggleMenu,setRoute,start,end,setStart,setEnd,coords }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [forecasts, setForecasts] = useState({});
   const [showSettings, setShowSettings] = useState(false);
@@ -72,7 +72,7 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
         <FontAwesomeIcon icon={faCaretDown} className={showRoute ? "caret-icon icon180" : "caret-icon"} />
       </button>
       {
-        showRoute && <Routing setRoute={setRoute}/>
+        showRoute && <Routing setRoute={setRoute} start={start} end={end} setStart={setStart} setEnd={setEnd} coords={coords}/>
       }
       <button onClick={() => setShowSettings(!showSettings)} className="toggle-button">
         Settings

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import { MapContainer, TileLayer,  Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
 import L from "leaflet";
@@ -9,7 +9,7 @@ import markerIconPng from "leaflet/dist/images/marker-icon.png";
 import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { getLayerAPI, getWeatherLayers } from "../api/map";
-import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader } from "@react-google-maps/api";
+import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader,Marker } from "@react-google-maps/api";
 
 const googleMapsKey = process.env.REACT_APP_GOOGLE_API_KEY;
 const openWeatherMapKey = process.env.REACT_APP_WEATHER_API_KEY;
@@ -32,13 +32,14 @@ const weatherLayers = {
   Humidity: "humidity_new"
 };
 
-const Map = ({ lat, lon,route }) => {
+const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => {
   const [selectedLayers, setSelectedLayers] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [mapInstance, setMapInstance] = useState(null);
   const [directions, setDirections] = useState(null);
-  const [isOpen,setIsOpen] = useState(true)
+  
+  const [centre,setCentre] = useState({lat:coords.lat,lng:coords.lon})
   
   useEffect(() => {
     const hasShownHelp = localStorage.getItem("hasShownHelp");
@@ -59,7 +60,8 @@ const Map = ({ lat, lon,route }) => {
       {
         origin: starts,
         destination: ends,
-        travelMode: window.google.maps.TravelMode.DRIVING,
+        travelMode: window.google.maps.TravelMode.WALKING,
+        provideRouteAlternatives:true,
       },
       (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
@@ -79,8 +81,7 @@ const Map = ({ lat, lon,route }) => {
     }
 
     if (route.destination){
-      console.log(route.origin)
-      console.log(route.destination)
+    
       getRoute(route.origin,route.destination)
 
     }
@@ -88,6 +89,20 @@ const Map = ({ lat, lon,route }) => {
     console.log(route)
   },[isLoaded,route])
 
+
+  const makeNull2 = () => {
+    setRoute(prevRoute => ({
+      ...prevRoute,   // Keep all existing properties
+      destination: null    // Modify only 'origin'
+    }));
+  }
+
+  const makeNull = () => {
+    setRoute({
+      origin:coords,
+      destination:null
+    })
+  }
 
   useEffect(() => {
     if (!mapInstance) return;
@@ -114,6 +129,9 @@ const Map = ({ lat, lon,route }) => {
       prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
     );
   };
+  
+
+  
 
   return (
     <div className="map-container">
@@ -148,17 +166,11 @@ const Map = ({ lat, lon,route }) => {
         </div>
       )}
 
-     {(route.origin == null) && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>Your current location has not loaded properly, please refresh the page to close popup</h2>
+    
 
-          </div>
-        </div>
-      </div> }
       
-      
-      {(route.origin == null && route.destination == null) && <div>
+{/*       
+      {(start == "") && <div>
         <div className="popup-overlay">
           <div className="popup">
             {(!route.origin && !route.origin) ? <div>
@@ -169,25 +181,31 @@ const Map = ({ lat, lon,route }) => {
 
             </div> }
           </div>
+          <button onClick={() => makeNull()} >Close</button>
         </div>
-      </div> }
+      </div> } */}
 
-      {(route.destination == null) && <div>
+      {(directions == null && route.origin && route.destination) && <div>
         <div className="popup-overlay">
           <div className="popup">
           <h2>This route is not available, please refresh and try a route that is more viable  </h2>
-          
+          <button onClick={() => makeNull2()} className="buttons">Close</button>
           </div>
         </div>
       </div> }
       {isLoaded ? (
         <GoogleMap
-          center={defaultCenter}
-          zoom={6}
+          center={centre}
+          zoom={12}
           mapContainerStyle={containerStyle}
           onLoad={(map) => setMapInstance(map)}
+          options={{
+            mapTypeControl: false,
+            fullscreenControl:false,
+          }}
         >
           {directions && <DirectionsRenderer directions={directions} />}
+          <Marker position={centre}></Marker>
         </GoogleMap>
       ) : (
         <>
@@ -198,33 +216,8 @@ const Map = ({ lat, lon,route }) => {
         </div>
         </>
       )}
-      {/* {(directions && isOpen ) && <div className="confirmation">
-          <p className="disclaimer">Disclaimer: This is the most shaded route, but your actual path may vary.</p>
-          <button className="confirmRoute" onClick={() => setIsOpen(prev => !prev)}>Close</button>
-        </div>} */}
-
-{/*       
-<MapContainer
-        center={[lat, lon]}
-        zoom={5}
-        className="h-[500px] w-full"
-      >
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
 
 
-        <TileLayer
-          url="https://{s}.google.com/vt/lyrs=m&x={x}&y={y}&z={z}"
-          subdomains={["mt0", "mt1", "mt2", "mt3"]}
-        />
-
-        {selectedLayers.map((layer) => (
-          <TileLayer key={layer} url={getLayerAPI(layer)} />
-        ))}
-
-        <Marker position={[lat, lon]} icon={customMarker}>
-          <Popup>Current Location</Popup>
-        </Marker>
-      </MapContainer> */}
     </div>
   );
 };

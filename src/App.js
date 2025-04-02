@@ -42,6 +42,8 @@ function App() {
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: googleMapsKey,
   });
+  const [start,setStart] = useState("")
+  const [end,setEnd] = useState("")
 
   const isCacheValid = (storedData) => {
     if (!storedData) return false;
@@ -116,7 +118,7 @@ function App() {
     <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
       <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} setCoords={setCoords}/>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} setRoute={setRoute} />
+        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} setRoute={setRoute} start={start} end={end} setStart={setStart} setEnd={setEnd} />
       </div>
       <div className="grid-container">
         <div className="weather-card">
@@ -138,7 +140,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <Map op="TA2" lat={coords.lat} lon={coords.lon} route={route} />
+              <Map op="TA2" lat={coords.lat} lon={coords.lon} route={route} setRoute={setRoute} coords={coords} start={start} end={end} setEnd={setEnd} setStart={setStart}/>
             )
           )}
         </div>
