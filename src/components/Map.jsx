@@ -40,12 +40,6 @@ const Map = ({ lat, lon,route }) => {
   const [directions, setDirections] = useState(null);
   const [isOpen,setIsOpen] = useState(true)
   
-  const start = { lat: 37.7749, lng: -122.4194 }; // San Francisco
-  const end = { lat: 34.0522, lng: -118.2437 }; // Los Angeles  
-
-
-  
-
   useEffect(() => {
     const hasShownHelp = localStorage.getItem("hasShownHelp");
     if (!hasShownHelp) {
@@ -54,17 +48,13 @@ const Map = ({ lat, lon,route }) => {
     }
   }, []);
 
-
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: googleMapsKey,
   });
 
-            
   const getRoute = (starts,ends) => {
-      
 
     const directionsService = new window.google.maps.DirectionsService();
-
     directionsService.route(
       {
         origin: starts,
@@ -82,9 +72,6 @@ const Map = ({ lat, lon,route }) => {
     );
   };
 
-
-
-
   useEffect(() => {
 
     if (!isLoaded) {
@@ -98,11 +85,8 @@ const Map = ({ lat, lon,route }) => {
 
     }
 
-
-  //   getRoute();
     console.log(route)
   },[isLoaded,route])
-
 
 
   useEffect(() => {
@@ -163,6 +147,39 @@ const Map = ({ lat, lon,route }) => {
         ))}
         </div>
       )}
+
+     {(route.origin == null) && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>Your current location has not loaded properly, please refresh the page to close popup</h2>
+
+          </div>
+        </div>
+      </div> }
+      
+      
+      {(route.origin == null && route.destination == null) && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+            {(!route.origin && !route.origin) ? <div>
+              <h2>Your start location is empty. Please close the popup, refresh the page and add one</h2>
+              
+            </div>:<div>
+              <h2>Your end location is empty. Please close the popup, refresh the page and add one </h2>
+
+            </div> }
+          </div>
+        </div>
+      </div> }
+
+      {(route.destination == null) && <div>
+        <div className="popup-overlay">
+          <div className="popup">
+          <h2>This route is not available, please refresh and try a route that is more viable  </h2>
+          
+          </div>
+        </div>
+      </div> }
       {isLoaded ? (
         <GoogleMap
           center={defaultCenter}
@@ -173,12 +190,18 @@ const Map = ({ lat, lon,route }) => {
           {directions && <DirectionsRenderer directions={directions} />}
         </GoogleMap>
       ) : (
-        <p>Loading map...</p>
+        <>
+        <div>
+          <div className="popup">
+            <h3>Loading Map</h3>
+          </div>
+        </div>
+        </>
       )}
-      {(directions && isOpen ) && <div className="confirmation">
+      {/* {(directions && isOpen ) && <div className="confirmation">
           <p className="disclaimer">Disclaimer: This is the most shaded route, but your actual path may vary.</p>
           <button className="confirmRoute" onClick={() => setIsOpen(prev => !prev)}>Close</button>
-        </div>}
+        </div>} */}
 
 {/*       
 <MapContainer

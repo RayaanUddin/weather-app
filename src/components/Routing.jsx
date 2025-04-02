@@ -4,11 +4,10 @@ import "../styles/Routing.css";
 
 const defaultCenter = { lat: 37.7749, lng: -122.4194 }; 
 
-function Routing({setRoute}) {
+function Routing({setRoute,start,end,setStart,setEnd}) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directions, setDirections] = useState(null);
-  const [start,setStart] = useState("")
-  const [end,setEnd] = useState("")
+  
  
   const [errorLocation,setErrorLocation] = useState(false)
   const [errorCurrentLocation,setErrorCurrentLocation] = useState(false)
@@ -44,13 +43,7 @@ useEffect(() => {
   }
 }, []);
 
-const handleCheckboxChange = (e) => {
-  const { name, checked } = e.target;
-  setWeatherConditions((prev) => ({
-      ...prev,
-      [name]: checked,
-  }));
-};
+
 const [mapSize, setMapSize] = useState({
   width: window.innerWidth < 500 ? "80vw" : "72vw",
   height: window.innerWidth < 500 ? "450px" : "60vh",
@@ -71,9 +64,6 @@ useEffect(() => {
 }, []);
 
 
-
-
-
 const setRoutes = () => {
   const routeJSON = {
     origin:start || currentLocation,
@@ -85,11 +75,9 @@ const setRoutes = () => {
 }
 
 
-
   return (
     <div>
       
-       
       <div className="boxContainer">
         <div className="stuff">
           
@@ -112,7 +100,6 @@ const setRoutes = () => {
                       />
               </div>
             </div>
-            
           
           <div className="buttonContainer">
             <button onClick={setRoutes} className="searchButton">
@@ -122,51 +109,6 @@ const setRoutes = () => {
         </div>
        
       </div>
-      
-      
-      
-      {errorCurrentLocation && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>Your current location has not loaded properly, please close this popup and try again  </h2>
-          <button className="buttons" onClick={() => setErrorCurrentLocation(false)}>Close</button>
-          </div>
-        </div>
-      </div> }
-      
-      
-      {errorWeather && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>The weather has not loaded,there may be no weather available for this location, please can you pick a new route otherwise refresh the page  </h2>
-          <button  className="buttons" onClick={() => setErrorWeather(false)}>Close</button>
-          </div>
-        </div>
-      </div> }
-      {/* {errorRoute && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>This route is not available, please can you try a route that is more viable  </h2>
-          <button className="buttons"onClick={() => setErrorCurrentLocation(false)}>Close</button>
-          </div>
-        </div>
-      </div> } */}
-      
-      {errorLocation && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-            {(!start && !currentLocation) ? <div>
-              <h2>Your start location is empty. Please close the popup, refresh the page and add one</h2>
-              <button className="buttons" onClick={() => setErrorLocation(false)}>Close</button>
-            </div>:<div>
-              <h2>Your end location is empty. Please close the popup, refresh the page and add one </h2>
-              <button className="buttons" onClick={() => setErrorLocation(false)}>Close</button>
-            </div> }
-          </div>
-        </div>
-      </div> }
-              
-      
       
     </div>
   );
