@@ -123,7 +123,16 @@ label #text {
 }
 
 
-
+.buttons,.searchButton,.confirmRoute {
+    font-family: 'Inter', sans-serif;
+    font-size: 1rem;
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
 
   .buttonContainer {
     display: flex;
@@ -132,7 +141,7 @@ label #text {
     height: 15vh; /* Full viewport height */
   }
   
-  .buttons {
+  /* .buttons {
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
     padding: 10px 20px;
@@ -143,7 +152,7 @@ label #text {
     cursor: pointer;
     width: 9.375rem;
   }
-  
+   */
   button:hover {
     background-color: #0056b3;
   }
