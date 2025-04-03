@@ -3,6 +3,8 @@
 ## Overview
 This React application fetches weather forecasts and displays weather conditions, a map, and gear recommendations for users. It allows users to view daily and hourly weather forecasts, switch between metric and imperial units, and check running conditions.
 
+[Live Here](https://weather.rayaanuddin.com/)
+
 ## Features
 - Retrieves weather forecast data from OpenWeather API
 - Displays 5-day weather forecast
