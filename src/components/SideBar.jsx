@@ -22,33 +22,35 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
   useEffect(() => {
     const fetchForecasts = async () => {
       const results = await Promise.all(
-        searchHistory.map(async (location) => {
+        searchHistory.map(async (coords) => {
           try {
-            const response = await fetchCurrentForecast(location);
-            return { location, forecast: response.data };
+            const response = await fetchCurrentForecast(coords);
+            return { coords, forecast: response.data };
           } catch (error) {
-            console.error(`Error fetching forecast for ${location}:`, error);
-            const updatedHistory = searchHistory.filter((item) => item !== location);
+            console.error(
+              `Error fetching forecast for coords ${coords.lat}, ${coords.lon}:`,
+              error
+            );
+            const updatedHistory = searchHistory.filter(
+              (item) => item.lat !== coords.lat || item.lon !== coords.lon
+            );
             setSearchHistory(updatedHistory);
             localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
-            return { location, forecast: null };
+            return { coords, forecast: null };
           }
         })
       );
 
       const forecastsObject = results.reduce((acc, item) => {
-        acc[item.location] = item.forecast;
+        const key = `${item.coords.lat}, ${item.coords.lon}`;
+        acc[key] = item.forecast;
         return acc;
       }, {});
 
       setForecasts(forecastsObject);
     };
 
-    if (searchHistory.length > 0) {
-      fetchForecasts().then(results => {
-        console.log("Fetched forecasts for history:", results);
-      });
-    }
+    fetchForecasts();
   }, [searchHistory]);
 
   return (
