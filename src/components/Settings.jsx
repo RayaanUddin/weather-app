@@ -8,10 +8,12 @@ const Settings = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, unit,
   const { error, flashRed, handleError } = useErrorHandler(null, 10000);
   const [showModal, setShowModal] = useState(false);
 
+  //Function to store what checkboxes are currently checked
   const handleCheckboxChange = (option, value) => {
     setTempMetrics((prev) => ({ ...prev, [option]: value }));
   };
 
+  //Function to check if checkboxes are valid and save the state if they are.
   const applyMetricSettings = () => {
     const numOfSelected = Object.values(tempMetrics).filter(Boolean).length;
     if (numOfSelected === 4) {
