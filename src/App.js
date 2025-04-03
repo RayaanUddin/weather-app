@@ -11,8 +11,6 @@ import { weatherData } from "./utils/weatherUtil";
 import * as unitConversion from "./utils/unitConversion";
 import { getCurrentCoords } from "./utils/getCurrentCoords";
 import Header from "./components/Header";
-import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader } from "@react-google-maps/api";
-const googleMapsKey = process.env.REACT_APP_GOOGLE_API_KEY;
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
@@ -39,9 +37,6 @@ function App() {
   );
   const [isNightMode, setIsNightMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: googleMapsKey,
-  });
   const [start,setStart] = useState("")
   const [end,setEnd] = useState("")
 
