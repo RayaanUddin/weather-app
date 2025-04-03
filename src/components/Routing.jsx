@@ -8,12 +8,13 @@ function Routing({setRoute,start,end,setStart,setEnd,coords}) {
   const [currentLocation, setCurrentLocation] = useState(null);
   const [directions, setDirections] = useState(null);
   const [locationName, setLocationName] = useState("");
+  const [isDestEmpty,setIsDestEmpty] = useState(false)
   
  
   const { isLoaded } = useJsApiLoader({
     googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY, // Replace with your API key
   });
-  const isDisabled = !start.trim() || !end.trim();
+  const isDisabled = !end.trim();
 
   const [weatherConditions, setWeatherConditions] = useState({
     rain: false,
@@ -33,8 +34,7 @@ useEffect(() => {
       },
       (error) => {
         console.error("Error getting location:", error)
-        // setErrorCurrentLocation(true)
-
+       
       }
     );
   }
@@ -62,6 +62,10 @@ useEffect(() => {
 
 
 const setRoutes = () => {
+  if (end === "") {
+    setIsDestEmpty(true)
+    return;
+  }
   const routeJSON = {
     origin:start || currentLocation,
     destination:end
@@ -100,7 +104,7 @@ const clickConvert = () => {
             <div>
               <p className="searchHelper">Search Helper</p>
             </div>
-            <div>
+            <div className="textHelp">
               <p>When writing your locations, please be as specific as possible e.g Stratford,London,UK instead of Stratford,UK if you are focusing on London, otherwise you would pick the town Stratford in the Midlands</p>
               <br />
               <p>If you leave the enter starting point box empty, then it would automatically make your current location the start location</p>
@@ -149,6 +153,15 @@ const clickConvert = () => {
             <button onClick={setRoutes} className="searchButton" >
                       Search
             </button>
+            
+          </div>
+          <div>
+          {
+              isDestEmpty && <div className="confirmation">
+              <p className="disclaimer">Please enter a destination</p>
+              <button className="confirmRoute" onClick={() => setIsDestEmpty(false)}>Close</button>
+            </div>
+            }
           </div>
         </div>
         

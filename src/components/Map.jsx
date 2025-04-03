@@ -65,7 +65,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
       },
       (result, status) => {
         if (status === window.google.maps.DirectionsStatus.OK) {
-          console.log(result)
+          console.log(result.routes.length)
           setDirections(result);
         } else {
           console.error("Directions request failed:", status);
@@ -166,9 +166,6 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
         </div>
       )}
 
-    
-
-      
 {/*       
       {(start == "") && <div>
         <div className="popup-overlay">
@@ -209,9 +206,9 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
         </GoogleMap>
       ) : (
         <>
-        <div>
+        <div className="popup-overlay">
           <div className="popup">
-            <h3>Loading Map</h3>
+            <h3>Loading Map..</h3>
           </div>
         </div>
         </>
