@@ -171,7 +171,7 @@ label #text {
     display: flex;
     flex-direction: row;
     position: relative;
-    left: 5px;
+    left: 9px;
     color: red;
     font-weight: bold;
 }
