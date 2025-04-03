@@ -105,19 +105,6 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
   }
 
 
-  const makeNull2 = () => {
-    setRoute(prevRoute => ({
-      ...prevRoute,   // Keep all existing properties
-      destination: null    // Modify only 'origin'
-    }));
-  }
-
-  const makeNull = () => {
-    setRoute({
-      origin:coords,
-      destination:null
-    })
-  }
 
   useEffect(() => {
     if (!mapInstance) return;
