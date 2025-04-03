@@ -29,6 +29,7 @@
     flex-direction: column;
     top: 30px;
     right: 30px;
+    gap: 5px;
     z-index: 1000;
     background: white;
     color: black;
@@ -39,25 +40,19 @@
 
 .settings-panel h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 1em;
     font-weight: bold;
 }
 
 .settings-panel label {
     display: flex;
+    font-size: 0.8em;
+    gap: 2px;
     align-items: center;
     flex-direction: row;
-    font-size: 14px;
-    margin: 2px 0;
     cursor: pointer;
     height: 10%;
     width: 20%;
-}
-
-.settings-panel input {
-    margin-right: 5px;
-    position: relative;
-    top:5px;
 }
 .buttons {
     font-family: 'Inter', sans-serif;
