@@ -1,5 +1,11 @@
 import { useState } from "react";
 
+/**
+ * Custom hook to handle errors in a React component.
+ * @param initialState
+ * @param displayDuration
+ * @returns {{error: unknown, flashRed: boolean, handleError: handleError}}
+ */
 export const useErrorHandler = (initialState = null, displayDuration = 10000) => {
   const [error, setError] = useState(initialState);
   const [flashRed, setFlashRed] = useState(false);

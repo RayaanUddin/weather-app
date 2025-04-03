@@ -1,6 +1,16 @@
 import React from "react";
 import "../styles/ConfirmModal.css";
 
+/**
+ * ConfirmModal Component
+ * This component is used to display a confirmation modal dialog with a message and two buttons: "Yes" and "No".
+ * @param show
+ * @param onClose
+ * @param onConfirm
+ * @param text
+ * @returns {JSX.Element|null}
+ * @constructor
+ */
 const ConfirmModal = ({ show, onClose, onConfirm, text }) => {
   if (!show) return null;
 

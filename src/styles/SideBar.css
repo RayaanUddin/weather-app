@@ -33,14 +33,6 @@ h2 {
     color: #E0E3EB;
 }
 
-.location-form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    width: 100%;
-    z-index: 0;
-}
-
 .previous-searches-title {
     font-size: 1.1rem;
     font-weight: bold;
@@ -67,7 +59,7 @@ h2 {
 }
 
 
-.location-search {
+.location-search, .settings-page, .routing {
     background-color: #2C3E50;
     padding: 15px;
     border-radius: 10px;
@@ -94,6 +86,40 @@ h2 {
     color: #E0E3EB;
     border: 1px solid #555;
     transition: background 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    .input {
+        width: 100%;
+        padding: 10px;
+        border-radius: 6px;
+        border: 1px solid #555;
+        background-color: #444;
+        color: #E0E3EB;
+        font-size: 1rem;
+        transition: border 0.3s ease-in-out;
+    }
+}
+
+.location-container {
+    position: relative;
+    width: 100%;
+    .input {
+        padding-right: 40px;
+    }
+}
+
+.route-current-location {
+    position: absolute;
+    right: 10px;
+    top: 50%;
+    transform: translateY(-50%);
+    cursor: pointer;
+    z-index: 1;
+    img {
+        width: 30px;
+        height: 30px;
+    }
 }
 
 .location-component button{
@@ -106,18 +132,6 @@ h2 {
     cursor: pointer;
     transition: background 0.3s;
     width: 100%;
-}
-
-.settings-page {
-    background-color: #2C3E50;
-    padding: 15px;
-    border-radius: 10px;
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    margin-top: 10px;
-    animation: fadeIn 0.3s ease-in-out;
 }
 
 .change-metrics, .clear-storage, .display-meters{
@@ -203,8 +217,51 @@ h2 {
     padding: 0.4em;
 }
 
+.confirmation {
+    background-color: rgba(30, 42, 56, 0.9);
+    color: #E0E3EB;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+    text-align: center;
+    overflow: hidden;
+    /* Trigger fadeOut and collapse after a 3s delay */
+    animation: fadeOut 5s forwards 3s, collapse 5s forwards 3s;
+}
+
+.disclaimer {
+    font-size: 1rem;
+    margin-bottom: 10px;
+}
+
+/* Fade out only opacity */
+@keyframes fadeOut {
+    0% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+    }
+}
+
+/* Collapse animated height, padding and margin */
+@keyframes collapse {
+    0% {
+        max-height: 200px; /* Approximate initial max-height */
+        padding-top: 20px;
+        padding-bottom: 20px;
+        margin: 0 0 20px 0; /* Adjust if margin is used */
+    }
+    100% {
+        max-height: 0;
+        padding-top: 0;
+        padding-bottom: 0;
+        margin: 0;
+    }
+}
+
 /* Media queries for desktop */
-@media screen and (min-width: 600px) {
+@media screen and (min-width: 1000px) {
     .sidebar {
         width: 40vw;
     }

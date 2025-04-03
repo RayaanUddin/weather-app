@@ -1,9 +1,22 @@
 import React, { useEffect, useRef } from 'react';
 
-const LocationSearch = ({ placeholder = "Search location...", onPlaceChanged, className = "" }) => {
+/**
+ * LocationSearch Component
+ * This component is used to search for locations using Google Places API.
+ * It autocompletes the input field with location suggestions.
+ * @param placeholder
+ * @param onPlaceChanged
+ * @param className
+ * @param value
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const LocationSearch = ({ placeholder = "Search location...", onPlaceChanged, className = "", value=null }) => {
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
-
+  if (value && inputRef && inputRef.current) {
+    inputRef.current.value = value;
+  }
   useEffect(() => {
     if (!window.google) {
       console.error("Google API is not loaded.");

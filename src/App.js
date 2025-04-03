@@ -11,17 +11,16 @@ import { weatherData } from "./utils/weatherUtil";
 import * as unitConversion from "./utils/unitConversion";
 import { getCurrentCoords } from "./utils/getCurrentCoords";
 import Header from "./components/Header";
-
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
-function isNight(lat, lon, date) {
+function isNight(lat, lon) {
   const now = new Date();
   const sunTimes = SunCalc.getTimes(now, lat, lon);
   return now < sunTimes.sunrise || now > sunTimes.sunset;
 }
 
-/*localStorage.clear();*/
+/*localStorage.clear(); */ // Used for testing purposes only
 
 function App() {
   const [forecastData, setForecastData] = useState(null);
@@ -36,6 +35,8 @@ function App() {
   );
   const [isNightMode, setIsNightMode] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
+  const [start,setStart] = useState("")
+  const [end,setEnd] = useState("")
 
   const isCacheValid = (storedData) => {
     if (!storedData) return false;
@@ -50,6 +51,14 @@ function App() {
     "Air Pressure": true, "Sunset": false, "Feels Like": false,
     "Clouds": false, "Wind Speed": true, "Humidity": true,
   });
+
+ 
+  const [route,setRoute] = useState(JSON.parse(localStorage.getItem("route")) || 
+    {
+      origin:coords,
+      destination:null 
+    }   
+  )
 
   // Get coordinates on initial load
   useEffect(() => {
@@ -90,17 +99,20 @@ function App() {
         }).catch((err) => {
           setError("Could not fetch weather data. Please try again later.");
           setLoading(false);
+          console.error(err);
         });
       }
     }
     console.log(forecastData);
   }, [coords]);
 
+ 
+
   return (
     <div className={`App ${isNightMode ? "night-background" : "day-background"}`}>
       <Header toggleMenu={() => setIsOpen(!isOpen)} isOpen={isOpen} setCoords={setCoords}/>
       <div className={`sidebar ${isOpen ? "open" : ""}`}>
-        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} />
+        <SideBar selectedMetricsToDisplay={selectedMetricsToDisplay} setSelectedMetricsToDisplay={setSelectedMetricsToDisplay} setCoords={setCoords} unit={unit} setUnit={setUnit} toggleMenu={() => setIsOpen(!isOpen)} setRoute={setRoute} start={start} end={end} setStart={setStart} setEnd={setEnd} />
       </div>
       <div className="grid-container">
         <div className="weather-card">
@@ -122,7 +134,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <Map op="TA2" lat={coords.lat} lon={coords.lon} />
+              <Map route={route} setRoute={setRoute} coords={coords}/>
             )
           )}
         </div>

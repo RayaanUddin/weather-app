@@ -1,9 +1,20 @@
 import React, { useState } from "react";
-import {getLocationByCoords, locationCoords} from "../api/location";
 import LocationWeather from "./LocationWeather";
 import { useErrorHandler } from "../utils/errorHandler";
 import LocationInput from "./LocationInput";
 
+/**
+ * LocationSearch Component
+ * This is part of the side panel where it allows user to search for a location to set, and preview history of searches.
+ * @param setCoords
+ * @param toggleMenu
+ * @param unit
+ * @param forecasts
+ * @param searchHistory
+ * @param setSearchHistory
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const LocationSearch = ({ setCoords, toggleMenu, unit, forecasts, searchHistory, setSearchHistory }) => {
   const [inputLocation, setInputLocation] = useState(null);
   const { error, flashRed, handleError } = useErrorHandler(null, 10000);
@@ -14,14 +25,12 @@ const LocationSearch = ({ setCoords, toggleMenu, unit, forecasts, searchHistory,
       toggleMenu();
       if (inputLocation) {
         setCoords(inputLocation);
-
         // Update search history (avoid duplicates)
         if (!searchHistory.includes(inputLocation)) {
           const updatedHistory = [inputLocation, ...searchHistory].slice(0, 5);
           setSearchHistory(updatedHistory);
           localStorage.setItem("searchHistory", JSON.stringify(updatedHistory));
         }
-
       } else {
         handleError("Could not retrieve location.");
       }
@@ -50,14 +59,14 @@ const LocationSearch = ({ setCoords, toggleMenu, unit, forecasts, searchHistory,
               }
             }
           }
-          className={`menu-button ${flashRed ? "flash-red" : ""}`}
-          />
+          className={`input ${flashRed ? "flash-red" : ""}`}
+        />
         {error && <p className="error-message">{error}</p>}
         <button onClick={handleLocationSearch}>Search</button>
       </div>
       <h4>Previous Searches</h4>
       <div className="previous-locations">
-        {searchHistory.map((coords, index) => {
+        {searchHistory.map((coords) => {
           const key = `${coords.lat}, ${coords.lon}`;
           return (
             forecasts[key] ? (

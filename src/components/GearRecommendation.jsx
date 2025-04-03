@@ -1,6 +1,14 @@
 import React, { useState, useEffect } from "react";
 
+/**
+ * GearRecommendation Component
+ * This component provides gear recommendations based on the weather conditions.
+ * @param weatherId
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const GearRecommendation = ({ weatherId }) => {
+  // Define the gear suggestions based on weather conditions
   const gearSuggestions = {
     thunderstorm: [
       { name: "Waterproof Jacket", img: "https://emojicdn.elk.sh/🧥" },
@@ -41,6 +49,7 @@ const GearRecommendation = ({ weatherId }) => {
 
   const [gear, setGear] = useState([]);
 
+  // Set the gear based on the weather ID from OpenWeatherMap
   useEffect(() => {
     if (weatherId >= 200 && weatherId < 300) setGear(gearSuggestions.thunderstorm);
     else if (weatherId >= 300 && weatherId < 400) setGear(gearSuggestions.drizzle);

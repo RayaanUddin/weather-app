@@ -1,28 +1,30 @@
-import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import React, {useEffect, useState} from "react";
 import "leaflet/dist/leaflet.css";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
-import L from "leaflet";
+import {faCog} from "@fortawesome/free-solid-svg-icons";
 import "../api/map.js";
 import "../styles/Map.css";
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getLayerAPI, getWeatherLayers } from "../api/map";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {getLayerAPI, getWeatherLayers} from "../api/map";
+import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from "@react-google-maps/api";
+import Modal from "./Modal";
 
-const customMarker = new L.Icon({
-  iconUrl: markerIconPng,
-  shadowUrl: markerShadowPng,
-  iconSize: [20, 30], // Default Leaflet size
-  iconAnchor: [12, 41], // Center bottom
-  popupAnchor: [1, -34], // Popup positioning
-});
-
-const Map = ({ lat, lon }) => {
+/**
+ * Map Component
+ * This component is used to display a Google Map with weather layers and route directions.
+ * @param route
+ * @param setRoute
+ * @param coords
+ * @returns {JSX.Element}
+ * @constructor
+ */
+const Map = ({ route,setRoute,coords}) => {
   const [selectedLayers, setSelectedLayers] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
-
+  const [mapInstance, setMapInstance] = useState(null);
+  const [directions, setDirections] = useState(null);
+  const [centre] = useState({lat:coords.lat,lng:coords.lon});
+  
   useEffect(() => {
     const hasShownHelp = localStorage.getItem("hasShownHelp");
     if (!hasShownHelp) {
@@ -31,13 +33,80 @@ const Map = ({ lat, lon }) => {
     }
   }, []);
 
-  const toggleLayer = (layer) => {
-    setSelectedLayers((prev) =>
-      prev.includes(layer)
-        ? prev.filter((l) => l !== layer)
-        : [...prev, layer]
+  const { isLoaded } = useJsApiLoader({
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
+  });
+
+  const getRoute = (starts,ends) => {
+    const directionsService = new window.google.maps.DirectionsService();
+    directionsService.route(
+      {
+        origin: starts,
+        destination: ends,
+        travelMode: window.google.maps.TravelMode.WALKING,
+        provideRouteAlternatives:true,
+      },
+      (result, status) => {
+        if (status === window.google.maps.DirectionsStatus.OK) {
+          console.log(result)
+          console.log(result.routes.length)
+          setDirections(result);
+        } else {
+          console.error("Directions request failed:", status);
+        }
+      }
     );
   };
+
+  // gets the route the user wants in quick succession
+  useEffect(() => {
+    if (!isLoaded) {
+      return;
+    }
+    if (route.destination){
+      getRoute(route.origin,route.destination)
+    }
+  },[isLoaded,route])
+
+  // deletes the route if user does not want it displayed by a press of a button
+  const reset = () => {
+    setRoute((prevRoute) => ({
+      ...prevRoute, // Keep existing properties
+      origin: coords, // Update origin
+      destination: null, // Update destination
+    }));
+
+    setDirections(null)
+    localStorage.removeItem("route");
+  }
+
+  // toggles the layers the user wants on the map, whether it is wind or temperature, it would display to the user
+  const toggleLayer = (layer) => {
+    setSelectedLayers((prev) =>
+      prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
+    );
+  };
+
+  // displays the layers on the map on the user
+  useEffect(() => {
+    if (!mapInstance) return;
+    mapInstance.overlayMapTypes.clear(); // Clear previous overlays
+    // Loop through selected layers and add each one
+    selectedLayers.forEach((layer) => {
+      const weatherLayer = new window.google.maps.ImageMapType({
+        getTileUrl: (cord, zoom) => {
+          // Use coordinates and zoom to build the weather tile URL dynamically
+          return getLayerAPI(layer, cord.x, cord.y, zoom);
+        },
+        tileSize: new window.google.maps.Size(256, 256),  // Standard tile size
+        opacity: 0.6, // Adjust opacity of the weather layers as needed
+        name: layer,  // Name of the layer
+      });
+
+      // Push the weather layer to the map's overlayMapTypes
+      mapInstance.overlayMapTypes.push(weatherLayer);
+    });
+  }, [selectedLayers, mapInstance]);
 
   return (
     <div className="map-container">
@@ -55,31 +124,56 @@ const Map = ({ lat, lon }) => {
       {showSettings && (
         <div className="settings-panel">
           <h3>Weather Layers</h3>
-          {Object.entries(getWeatherLayers()).map(([name, key]) => (
-            <label key={key}>
+        
+          {Object.entries(getWeatherLayers()).map(([name, value]) => (
+          <div key={value}>
+            <label key={value}>
               <input
                 type="checkbox"
-                checked={selectedLayers.includes(key)}
-                onChange={() => toggleLayer(key)}
+                value={value}
+                checked={selectedLayers.includes(value)}
+                onChange={() => toggleLayer(value)}
               />
               {name}
             </label>
-          ))}
+          </div>
+        ))}
         </div>
       )}
 
-      <MapContainer center={[lat, lon]} zoom={5} className="h-[500px] w-full">
-        <TileLayer url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png" />
-
-        {/* Render selected weather layers */}
-        {selectedLayers.map((layer) => (
-          <TileLayer key={layer} url={getLayerAPI(layer)} />
-        ))}
-
-        <Marker position={[lat, lon]} icon={customMarker}>
-          <Popup>Current Location</Popup>
-        </Marker>
-      </MapContainer>
+      { // End route button
+        directions && <div className="closeRoute" style={{cursor:"pointer"}} onClick={reset}>
+          X
+        </div>
+      }
+      
+      {isLoaded ? ( // Check if the map is loaded first
+        <div style={{position:"relative"}}>
+          <GoogleMap
+            center={centre}
+            zoom={12}
+            mapContainerStyle={{ width: "100%", height: "40vh",borderRadius: "15px" }}
+            onLoad={(map) => setMapInstance(map)}
+            options={{
+              mapTypeControl: false,
+              fullscreenControl:false,
+              streetViewControl: false
+            }}
+          >
+            {directions && <DirectionsRenderer directions={directions} />}
+            <Marker position={centre}></Marker>
+          </GoogleMap>
+          {(route.origin && route.destination && directions?.status !== "OK") &&
+            (
+              <Modal show={true} onClose={() => reset()} title="Warning">
+                <p>This route is not available. Try a different route.</p>
+              </Modal>
+            )
+          }
+        </div>
+      ) : (
+        <p>Loading...</p>
+      )}
     </div>
   );
 };

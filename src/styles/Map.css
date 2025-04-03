@@ -2,10 +2,11 @@
     position: relative;
 }
 
+/* settings button, align with help feature and panel  */
 .settings-button {
     position: absolute;
     top: 5px;
-    right: 5px;
+    right: 13px;
     z-index: 1000;
     background: white;
     border: none;
@@ -23,12 +24,14 @@
     background: #f0f0f0;
 }
 
+/* Layer panel, choose openweathermap layers */
 .settings-panel {
     position: absolute;
     display: flex;
     flex-direction: column;
     top: 30px;
     right: 30px;
+    gap: 5px;
     z-index: 1000;
     background: white;
     color: black;
@@ -39,18 +42,33 @@
 
 .settings-panel h3 {
     margin: 0;
-    font-size: 14px;
+    font-size: 1em;
     font-weight: bold;
 }
 
 .settings-panel label {
     display: flex;
+    font-size: 0.8em;
+    gap: 2px;
     align-items: center;
-    font-size: 14px;
-    margin: 5px 0;
+    flex-direction: row;
     cursor: pointer;
+    height: 10%;
+    width: 20%;
 }
 
-.settings-panel input {
-    margin-right: 5px;
+/* the button for closing the route */
+.closeRoute {
+    position: absolute;
+    display: flex;
+    flex-direction: column;
+    top: 15px;
+    left: 10px;
+    z-index: 1000;
+    background: red;
+    font-weight: bold;
+    color: white;
+    padding: 10px;
+    border-radius: 3px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 }
