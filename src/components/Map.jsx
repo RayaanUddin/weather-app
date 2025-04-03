@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from "react";
+import React, {useEffect, useState} from "react";
 import "leaflet/dist/leaflet.css";
-import { faCog } from "@fortawesome/free-solid-svg-icons";
+import {faCog} from "@fortawesome/free-solid-svg-icons";
 import "../api/map.js";
 import "../styles/Map.css";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getWeatherLayers } from "../api/map";
-import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader,Marker } from "@react-google-maps/api";
+import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
+import {getLayerAPI, getWeatherLayers} from "../api/map";
+import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from "@react-google-maps/api";
 
 const containerStyle = { width: "100%", height: "40vh",borderRadius: "15px" };
 
@@ -94,33 +94,28 @@ const Map = ({ route,setRoute,coords}) => {
 
 
   // displays the layers on the map on the user
-
   useEffect(() => {
     if (!mapInstance) return;
 
-    // Clear existing overlays before adding new ones
-    mapInstance.overlayMapTypes.clear();
+    mapInstance.overlayMapTypes.clear(); // Clear previous overlays
 
-    // Add all selected weather layers
-    selectedLayers.forEach(layer => {
-      
+    // Loop through selected layers and add each one
+    selectedLayers.forEach((layer) => {
       const weatherLayer = new window.google.maps.ImageMapType({
-        getTileUrl: (coord, zoom) => {
-          console.log(coord.x)
-          const url = layer === "PA0" ? `https://maps.openweathermap.org/maps/2.0/weather/PA0/20/${coord.x}/${coord.y}?appid=${process.env.REACT_APP_WEATHER_API_KEY}&fill_bound=true&opacity=0.6`:`https://maps.openweathermap.org/maps/2.0/weather/${layer}/20/${coord.x}/${coord.y}?appid=${process.env.REACT_APP_WEATHER_API_KEY}&fill_bound=true&opacity=0.6`
-          console.log(url)
-
-          return url },
-        tileSize: new window.google.maps.Size(300, 300),
-        opacity: 0.6,
-        name: "Weather",
+        getTileUrl: (cord, zoom) => {
+          // Use coordinates and zoom to build the weather tile URL dynamically
+          return getLayerAPI(layer, cord.x, cord.y, zoom);
+        },
+        tileSize: new window.google.maps.Size(256, 256),  // Standard tile size
+        opacity: 0.6, // Adjust opacity of the weather layers as needed
+        name: layer,  // Name of the layer
       });
 
-      console.log(weatherLayer)
+      // Push the weather layer to the map's overlayMapTypes
       mapInstance.overlayMapTypes.push(weatherLayer);
     });
   }, [selectedLayers, mapInstance]);
-  
+
 
   return (
     <div className="map-container">
