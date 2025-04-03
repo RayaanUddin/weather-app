@@ -37,7 +37,6 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
   const [showHelp, setShowHelp] = useState(false);
   const [mapInstance, setMapInstance] = useState(null);
   const [directions, setDirections] = useState(null);
-  const [routeFromStorage] = useState(JSON.parse(localStorage.getItem("route")))
 
   const [isZero,setIsZero] = useState(false)
   
@@ -190,7 +189,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
       }
 
 
-      {(isZero && route.origin && route.destination) && <div>
+      {(isZero && route.origin && route.destination && directions !== null) && <div>
         <div className="popup-overlay">
           <div className="popup">
           <h2>This route is not available, please refresh and try a route that is more viable  </h2>
