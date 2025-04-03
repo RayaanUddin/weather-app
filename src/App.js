@@ -14,15 +14,13 @@ import Header from "./components/Header";
 const defaultCoords = { lat: 51.5074, lon: 0.1278 };
 const CACHE_EXPIRY_HOURS = 1; // Cache expires after 1 hour
 
-
-
-function isNight(lat, lon, date) {
+function isNight(lat, lon) {
   const now = new Date();
   const sunTimes = SunCalc.getTimes(now, lat, lon);
   return now < sunTimes.sunrise || now > sunTimes.sunset;
 }
 
-/*localStorage.clear();*/
+/*localStorage.clear(); */ // Used for testing purposes only
 
 function App() {
   const [forecastData, setForecastData] = useState(null);
@@ -101,6 +99,7 @@ function App() {
         }).catch((err) => {
           setError("Could not fetch weather data. Please try again later.");
           setLoading(false);
+          console.error(err);
         });
       }
     }
@@ -135,7 +134,7 @@ function App() {
             <p>{error}</p>
           ) : (
             forecastData && (
-              <Map op="TA2" lat={coords.lat} lon={coords.lon} route={route} setRoute={setRoute} coords={coords} start={start} end={end} setEnd={setEnd} setStart={setStart}/>
+              <Map route={route} setRoute={setRoute} coords={coords}/>
             )
           )}
         </div>

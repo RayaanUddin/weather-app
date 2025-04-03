@@ -4,8 +4,19 @@ import "../styles/HourlyForecast.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {faAngleLeft, faAngleRight} from "@fortawesome/free-solid-svg-icons";
 
+/**
+ * HourlyForecast Component
+ * This component is used to display the hourly forecast for a selected day.
+ * It includes a date selector and a list of hourly weather data.
+ * @param changeDay
+ * @param unit
+ * @param forecastData
+ * @param selectedDayIndex
+ * @param isNightMode
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const HourlyForecast = ({changeDay, unit, forecastData, selectedDayIndex, isNightMode}) => {
-
   // Function to get the selected date
   const getSelectedDate = () => {
     let nextDay = new Date();

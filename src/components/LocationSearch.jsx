@@ -3,6 +3,18 @@ import LocationWeather from "./LocationWeather";
 import { useErrorHandler } from "../utils/errorHandler";
 import LocationInput from "./LocationInput";
 
+/**
+ * LocationSearch Component
+ * This is part of the side panel where it allows user to search for a location to set, and preview history of searches.
+ * @param setCoords
+ * @param toggleMenu
+ * @param unit
+ * @param forecasts
+ * @param searchHistory
+ * @param setSearchHistory
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const LocationSearch = ({ setCoords, toggleMenu, unit, forecasts, searchHistory, setSearchHistory }) => {
   const [inputLocation, setInputLocation] = useState(null);
   const { error, flashRed, handleError } = useErrorHandler(null, 10000);

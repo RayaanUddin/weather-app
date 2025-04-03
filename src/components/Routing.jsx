@@ -5,6 +5,20 @@ import { convertCoordsToAddress } from "../api/location";
 import { getCurrentCoords } from "../utils/getCurrentCoords";
 import {useErrorHandler} from "../utils/errorHandler";
 
+/**
+ * Routing Component
+ * This component is used to set the route for the map.
+ * It allows the user to enter a starting point and an ending point.
+ * It also provides a button to set the current location as the starting point.
+ * It is part of the side panel.
+ * @param setRoute
+ * @param start
+ * @param end
+ * @param setStart
+ * @param setEnd
+ * @returns {JSX.Element}
+ * @constructor
+ */
 function Routing({ setRoute, start, end, setStart, setEnd }) {
   const [directions, setDirections] = useState(null);
   const [currentCoords, setCurrentCoords] = useState(null);

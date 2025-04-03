@@ -2,6 +2,16 @@ import * as unitConversion from "../utils/unitConversion";
 import React from "react";
 import "../styles/LocationWeather.css";
 
+/**
+ * LocationWeather Component
+ * This component is used to display the weather information for a specific location.
+ * It is used by LocationSearch.jsx to show the weather of previously searched locations.
+ * @param forecast
+ * @param unit
+ * @param onClick
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const LocationWeather = ({forecast, unit, onClick}) => {
   const isNight = forecast.weather[0].icon.includes('n');
 

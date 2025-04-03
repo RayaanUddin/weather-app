@@ -3,10 +3,29 @@ import "../styles/SideBar.css";
 import { fetchCurrentForecast } from "../api/forecast";
 import LocationSearch from "./LocationSearch";
 import Settings from "./Settings";
-import ConfirmModal from "./ConfirmModal";
 import { faCaretDown } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import Routing from "./Routing"
+
+/**
+ * SideBar Component
+ * This component is used to display the sidebar of the application.
+ * It includes buttons to change location, settings, and routing.
+ * @param selectedMetricsToDisplay
+ * @param setSelectedMetricsToDisplay
+ * @param setCoords
+ * @param unit
+ * @param setUnit
+ * @param toggleMenu
+ * @param setRoute
+ * @param start
+ * @param end
+ * @param setStart
+ * @param setEnd
+ * @param coords
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoords, unit, setUnit, toggleMenu,setRoute,start,end,setStart,setEnd,coords }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [forecasts, setForecasts] = useState({});
@@ -14,11 +33,13 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
   const [showLocationSearch, setShowLocationSearch] = useState(false);
   const [showRoute, setShowRoute] = useState(false);
 
+  // Get search history from local storage
   useEffect(() => {
     const storedLocations = JSON.parse(localStorage.getItem("searchHistory")) || [];
     setSearchHistory(storedLocations);
   }, []);
 
+  // Get forecast of search history. If error occurs, remove the location from search history.
   useEffect(() => {
     const fetchForecasts = async () => {
       const results = await Promise.all(
@@ -41,6 +62,7 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
         })
       );
 
+      // Key the forecasts by their coordinates
       const forecastsObject = results.reduce((acc, item) => {
         const key = `${item.coords.lat}, ${item.coords.lon}`;
         acc[key] = item.forecast;
@@ -59,7 +81,7 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
         Change Location
         <FontAwesomeIcon icon={faCaretDown} className={showLocationSearch ? "caret-icon icon180" : "caret-icon"} />
       </button>
-      {showLocationSearch && (
+      {showLocationSearch && ( // Show location search when button clicked
         <LocationSearch
           setCoords={setCoords}
           toggleMenu={toggleMenu}
@@ -73,14 +95,20 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
         Change Route
         <FontAwesomeIcon icon={faCaretDown} className={showRoute ? "caret-icon icon180" : "caret-icon"} />
       </button>
-      {
-        showRoute && <Routing setRoute={setRoute} start={start} end={end} setStart={setStart} setEnd={setEnd}/>
-      }
+      { showRoute && (// Show routing when button clicked
+        <Routing
+          setRoute={setRoute}
+          start={start}
+          end={end}
+          setStart={setStart}
+          setEnd={setEnd}
+        />
+      )}
       <button onClick={() => setShowSettings(!showSettings)} className="toggle-button">
         Settings
         <FontAwesomeIcon icon={faCaretDown} className={showSettings ? "caret-icon icon180" : "caret-icon"} />
       </button>
-      {showSettings && (
+      {showSettings && ( // Show settings when button clicked
         <Settings
           selectedMetricsToDisplay={selectedMetricsToDisplay}
           setSelectedMetricsToDisplay={setSelectedMetricsToDisplay}

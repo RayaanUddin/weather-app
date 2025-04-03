@@ -4,6 +4,7 @@ import axios from "axios";
  * Check if the location is valid and return the coordinates
  * @param {string} location Location to validate
  * @returns {Promise<[boolean, {lat:number, lon:number} | null]>}
+ * @deprecated
  */
 export const locationCoords = async (location: string): Promise<[boolean, { lat: number, lon: number } | null]> => {
   try {
@@ -32,6 +33,7 @@ export const locationCoords = async (location: string): Promise<[boolean, { lat:
  * @param {number} coords.lon - The longitude.
  * @param {number} [limit=1] - Maximum number of location results to return.
  * @returns {Promise<[boolean, string|null]>} Returns a tuple where the first value indicates success and the second is the location name.
+ * @deprecated
  */
 export const getLocationByCoords = async (coords:{lat:number, lon:number}, limit = 1) => {
   try {
@@ -58,11 +60,6 @@ export const getLocationByCoords = async (coords:{lat:number, lon:number}, limit
   }
 };
 
-/**
- * Converts coordinates to an address using Google Maps Geocoding API.s
- * @param coords - An object with latitude and longitude.
- * @return {string} - The formatted address.
- */
 /**
  * Converts coordinates to an address using Google Maps Geocoding API.
  * @param coords - An object with latitude and longitude.

@@ -1,7 +1,8 @@
 .map-container {
     position: relative;
 }
-/* settings button, makes sure it is on top right and aligns with the logo below  */
+
+/* settings button, align with help feature and panel  */
 .settings-button {
     position: absolute;
     top: 5px;
@@ -23,6 +24,7 @@
     background: #f0f0f0;
 }
 
+/* Layer panel, choose openweathermap layers */
 .settings-panel {
     position: absolute;
     display: flex;
@@ -53,44 +55,6 @@
     cursor: pointer;
     height: 10%;
     width: 20%;
-}
-.buttons {
-    font-family: 'Inter', sans-serif;
-    font-size: 1rem;
-    padding: 10px 20px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-/* gives overlay for errors */
-  .popup-overlay {
-    position: absolute;
-    top: 20%;
-    left: 25%;
-    width: 50%;
-    height: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-
-/* the main popup for the errors */
-.popup {
-    background: #2C3E50;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.3);
-    text-align: center;
-    font-size: 20px;
-    font-weight: bold;
-    z-index: 1000;
-  }
-
-.popup h2 {
-    color:white;
 }
 
 /* the button for closing the route */

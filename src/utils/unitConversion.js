@@ -1,16 +1,15 @@
+// Unit enum
 export const UnitType = {
   METRIC: "metric",
   IMPERIAL: "imperial",
 };
 
-/*@param {UnitType} unit Unit type*/
 /**
  * Convert temperature from Kelvin to Celsius or Fahrenheit
  * @param {number} temp Temperature in Kelvin
  * @param {string} unit Unit type ("metric" or "imperial")
  * @returns {number} Converted temperature
  */
-/*export const convertTemperature = (temp:number, unit:UnitType):number => {*/
 export const convertTemperature = (temp, unit) => {
   if (unit === UnitType.METRIC) {
     return temp - 273.15;
@@ -27,7 +26,6 @@ export const convertTemperature = (temp, unit) => {
  * @param {UnitType} unit
  * @return {string}
  */
-/*export const getUnitSymbol_Temperature = (unit:UnitType) => {*/
 export const getUnitSymbol_Temperature = (unit) => {
   return unit === UnitType.METRIC ? "°C" : "°F";
 }
@@ -37,7 +35,6 @@ export const getUnitSymbol_Temperature = (unit) => {
  * @param {UnitType} unit
  * @return {string}
  */
-/*export const getUnitSymbol_Speed = (unit:UnitType) => {*/
 export const getUnitSymbol_Speed = (unit) => {
   return unit === UnitType.METRIC ? "km/h" : "mph";
 }
@@ -48,7 +45,6 @@ export const getUnitSymbol_Speed = (unit) => {
  * @param {UnitType} unit Unit type
  * @returns {number} Converted wind speed
  */
-/*export const convertSpeed = (speed:number, unit:UnitType):number => {*/
 export const convertSpeed = (speed, unit) => {
   if (unit === UnitType.METRIC) {
     return speed * 3.6;
@@ -65,7 +61,6 @@ export const convertSpeed = (speed, unit) => {
  * @param {UnitType} unit
  * @return {string}
  */
-/*export const getUnitSymbol_Pressure = (unit:UnitType) => {*/
 export const getUnitSymbol_Pressure = (unit) => {
   return unit === UnitType.METRIC ? "hPa" : "inHg";
 }
@@ -76,7 +71,6 @@ export const getUnitSymbol_Pressure = (unit) => {
  * @param {UnitType} unit Unit type
  * @returns {number} Converted pressure
  */
-/*export const convertPressure = (pressure:number, unit:UnitType) => {*/
 export const convertPressure = (pressure, unit) => {
   if (unit === UnitType.METRIC) {
     return pressure;
@@ -93,7 +87,6 @@ export const convertPressure = (pressure, unit) => {
  * @param {number} timestamp Unix timestamp
  * @returns {number} Converted time (24h time)
  */
-/*export const convertTimestampToTime = (timestamp:string) => {*/
 export const convertTimestampToTime = (timestamp) => {
   const date = new Date(timestamp * 1000);
   let hours = date.getHours();

@@ -3,6 +3,19 @@ import * as unitConversion from "../utils/unitConversion";
 import ConfirmModal from "./ConfirmModal";
 import {useErrorHandler} from "../utils/errorHandler";
 
+/**
+ * Settings Component
+ * This component is used to display the settings page of the application.
+ * It allows the user to select which metrics to display and change the unit of measurement.
+ * It also provides a button to clear the local storage.
+ * It is part of the side panel.
+ * @param selectedMetricsToDisplay
+ * @param setSelectedMetricsToDisplay
+ * @param unit
+ * @param setUnit
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Settings = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, unit, setUnit }) => {
   const [tempMetrics, setTempMetrics] = useState({ ...selectedMetricsToDisplay });
   const { error, flashRed, handleError } = useErrorHandler(null, 10000);

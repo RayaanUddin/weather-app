@@ -6,16 +6,23 @@ import "../styles/Map.css";
 import {FontAwesomeIcon} from "@fortawesome/react-fontawesome";
 import {getLayerAPI, getWeatherLayers} from "../api/map";
 import {DirectionsRenderer, GoogleMap, Marker, useJsApiLoader} from "@react-google-maps/api";
+import Modal from "./Modal";
 
-const containerStyle = { width: "100%", height: "40vh",borderRadius: "15px" };
-
+/**
+ * Map Component
+ * This component is used to display a Google Map with weather layers and route directions.
+ * @param route
+ * @param setRoute
+ * @param coords
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Map = ({ route,setRoute,coords}) => {
   const [selectedLayers, setSelectedLayers] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
   const [mapInstance, setMapInstance] = useState(null);
   const [directions, setDirections] = useState(null);
-  
   const [centre] = useState({lat:coords.lat,lng:coords.lon});
   
   useEffect(() => {
@@ -79,15 +86,11 @@ const Map = ({ route,setRoute,coords}) => {
       prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
     );
   };
-  
-
 
   // displays the layers on the map on the user
   useEffect(() => {
     if (!mapInstance) return;
-
     mapInstance.overlayMapTypes.clear(); // Clear previous overlays
-
     // Loop through selected layers and add each one
     selectedLayers.forEach((layer) => {
       const weatherLayer = new window.google.maps.ImageMapType({
@@ -104,7 +107,6 @@ const Map = ({ route,setRoute,coords}) => {
       mapInstance.overlayMapTypes.push(weatherLayer);
     });
   }, [selectedLayers, mapInstance]);
-
 
   return (
     <div className="map-container">
@@ -139,50 +141,38 @@ const Map = ({ route,setRoute,coords}) => {
         </div>
       )}
 
-
-      {
+      { // End route button
         directions && <div className="closeRoute" style={{cursor:"pointer"}} onClick={reset}>
           X
         </div>
       }
       
-
-      {(route.origin && route.destination && directions?.status !== "OK") &&
-        (
-          <div>
-            <div className="popup-overlay">
-              <div className="popup">
-              <h2>This route is not available. Try a route that is more viable.</h2>
-              <button onClick={() => reset()} className="buttons">Close</button>
-              </div>
-            </div>
-          </div>
-        )
-      }
-      
-      {isLoaded ? (
-        <GoogleMap
-          center={centre}
-          zoom={12}
-          mapContainerStyle={containerStyle}
-          onLoad={(map) => setMapInstance(map)}
-          options={{
-            mapTypeControl: false,
-            fullscreenControl:false,
-            streetViewControl: false
-          }}
-        >
-          {directions && <DirectionsRenderer directions={directions} />}
-          <Marker position={centre}></Marker>
-        </GoogleMap>
-      ) : (
-        <>
-        <div className="popup-overlay">
-          <div className="popup">
-            <h3>Loading Map..</h3>
-          </div>
+      {isLoaded ? ( // Check if the map is loaded first
+        <div style={{position:"relative"}}>
+          <GoogleMap
+            center={centre}
+            zoom={12}
+            mapContainerStyle={{ width: "100%", height: "40vh",borderRadius: "15px" }}
+            onLoad={(map) => setMapInstance(map)}
+            options={{
+              mapTypeControl: false,
+              fullscreenControl:false,
+              streetViewControl: false
+            }}
+          >
+            {directions && <DirectionsRenderer directions={directions} />}
+            <Marker position={centre}></Marker>
+          </GoogleMap>
+          {(route.origin && route.destination && directions?.status !== "OK") &&
+            (
+              <Modal show={true} onClose={() => reset()} title="Warning">
+                <p>This route is not available. Try a different route.</p>
+              </Modal>
+            )
+          }
         </div>
-        </>
+      ) : (
+        <p>Loading...</p>
       )}
     </div>
   );
