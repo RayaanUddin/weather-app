@@ -26,12 +26,11 @@ const WeatherOverview = ({selectedMetricsToDisplay, forecastData, selectedDayInd
     { name: 'Feels Like', icon: 'temperatures.png', value: `${Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].feels_like.day, unit))} / ${Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].feels_like.night, unit))}`, unit: unitConversion.getUnitSymbol_Temperature(unit) },
     { name: 'Clouds', icon: 'clouds.png', value: forecastData.list[selectedDayIndex].clouds, unit: '%' },
   ];
-
   return (
     <div className="weather-overview">
       <h1>
         {selectedDayIndex === 0
-          ? Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit))
+          ? (forecastData.list[selectedDayIndex].hourly[0] ? Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].hourly[0].main.temp, unit)) : Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.night, unit)))
           : (
             <>
               {Math.round(unitConversion.convertTemperature(forecastData.list[selectedDayIndex].temp.day, unit))}
