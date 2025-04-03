@@ -26,7 +26,7 @@ import Routing from "./Routing"
  * @returns {JSX.Element}
  * @constructor
  */
-const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoords, unit, setUnit, toggleMenu,setRoute,start,end,setStart,setEnd,coords }) => {
+const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoords, unit, setUnit, toggleMenu,setRoute,start,end,setStart,setEnd }) => {
   const [searchHistory, setSearchHistory] = useState([]);
   const [forecasts, setForecasts] = useState({});
   const [showSettings, setShowSettings] = useState(false);

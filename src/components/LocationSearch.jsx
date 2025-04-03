@@ -66,7 +66,7 @@ const LocationSearch = ({ setCoords, toggleMenu, unit, forecasts, searchHistory,
       </div>
       <h4>Previous Searches</h4>
       <div className="previous-locations">
-        {searchHistory.map((coords, index) => {
+        {searchHistory.map((coords) => {
           const key = `${coords.lat}, ${coords.lon}`;
           return (
             forecasts[key] ? (
