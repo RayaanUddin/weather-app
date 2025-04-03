@@ -15,10 +15,8 @@ const Map = ({ route,setRoute,coords}) => {
   const [showHelp, setShowHelp] = useState(false);
   const [mapInstance, setMapInstance] = useState(null);
   const [directions, setDirections] = useState(null);
-
-  const [isZero,setIsZero] = useState(false)
   
-  const [centre] = useState({lat:coords.lat,lng:coords.lon})
+  const [centre] = useState({lat:coords.lat,lng:coords.lon});
   
   useEffect(() => {
     const hasShownHelp = localStorage.getItem("hasShownHelp");
@@ -33,7 +31,6 @@ const Map = ({ route,setRoute,coords}) => {
   });
 
   const getRoute = (starts,ends) => {
-
     const directionsService = new window.google.maps.DirectionsService();
     directionsService.route(
       {
@@ -48,8 +45,6 @@ const Map = ({ route,setRoute,coords}) => {
           console.log(result.routes.length)
           setDirections(result);
         } else {
-          
-          setIsZero(prev => !prev)
           console.error("Directions request failed:", status);
         }
       }
@@ -58,22 +53,15 @@ const Map = ({ route,setRoute,coords}) => {
 
   // gets the route the user wants in quick succession
   useEffect(() => {
-
     if (!isLoaded) {
       return;
     }
-
     if (route.destination){
-    
       getRoute(route.origin,route.destination)
-
     }
-
-    console.log(route)
   },[isLoaded,route])
 
   // deletes the route if user does not want it displayed by a press of a button
-
   const reset = () => {
     setRoute((prevRoute) => ({
       ...prevRoute, // Keep existing properties
@@ -84,6 +72,7 @@ const Map = ({ route,setRoute,coords}) => {
     setDirections(null)
     localStorage.removeItem("route");
   }
+
   // toggles the layers the user wants on the map, whether it is wind or temperature, it would display to the user
   const toggleLayer = (layer) => {
     setSelectedLayers((prev) =>
@@ -158,14 +147,18 @@ const Map = ({ route,setRoute,coords}) => {
       }
       
 
-      {(isZero && route.origin && route.destination && directions?.status !== "OK") && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-          <h2>This route is not available, please refresh and try a route that is more viable  </h2>
-          <button onClick={() => setIsZero(prev => !prev)} className="buttons">Close</button>
+      {(route.origin && route.destination && directions?.status !== "OK") &&
+        (
+          <div>
+            <div className="popup-overlay">
+              <div className="popup">
+              <h2>This route is not available. Try a route that is more viable.</h2>
+              <button onClick={() => reset()} className="buttons">Close</button>
+              </div>
+            </div>
           </div>
-        </div>
-      </div> }
+        )
+      }
       
       {isLoaded ? (
         <GoogleMap
@@ -191,8 +184,6 @@ const Map = ({ route,setRoute,coords}) => {
         </div>
         </>
       )}
-
-
     </div>
   );
 };

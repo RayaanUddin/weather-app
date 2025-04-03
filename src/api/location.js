@@ -33,7 +33,7 @@ export const locationCoords = async (location: string): Promise<[boolean, { lat:
  * @param {number} [limit=1] - Maximum number of location results to return.
  * @returns {Promise<[boolean, string|null]>} Returns a tuple where the first value indicates success and the second is the location name.
  */
-export const getLocationByCoords = async (coords, limit = 1) => {
+export const getLocationByCoords = async (coords:{lat:number, lon:number}, limit = 1) => {
   try {
     const response = await axios.get("https://api.openweathermap.org/geo/1.0/reverse", {
       params: {
@@ -56,4 +56,34 @@ export const getLocationByCoords = async (coords, limit = 1) => {
     console.error("Error fetching location by coordinates:", error);
     return [false, null];
   }
+};
+
+/**
+ * Converts coordinates to an address using Google Maps Geocoding API.s
+ * @param coords - An object with latitude and longitude.
+ * @return {string} - The formatted address.
+ */
+/**
+ * Converts coordinates to an address using Google Maps Geocoding API.
+ * @param coords - An object with latitude and longitude.
+ * @return {Promise<string>} - A promise that resolves with the formatted address.
+ */
+export const convertCoordsToAddress = async (coords: { lat: number; lon: number }): Promise<string | null> => {
+  if (!window.google) {
+    return null;
+  }
+
+  return new Promise((resolve, reject) => {
+    const geocoder = new window.google.maps.Geocoder();
+    const latLng = new window.google.maps.LatLng(coords.lat, coords.lon);
+
+    geocoder.geocode({ location: latLng }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        resolve(results[0].formatted_address);
+      } else {
+        console.error("Geocoding failed:", status);
+        reject("Geocoding failed");
+      }
+    });
+  });
 };

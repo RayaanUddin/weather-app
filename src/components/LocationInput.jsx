@@ -1,9 +1,11 @@
 import React, { useEffect, useRef } from 'react';
 
-const LocationSearch = ({ placeholder = "Search location...", onPlaceChanged, className = "" }) => {
+const LocationSearch = ({ placeholder = "Search location...", onPlaceChanged, className = "", value=null }) => {
   const inputRef = useRef(null);
   const autocompleteRef = useRef(null);
-
+  if (value && inputRef && inputRef.current) {
+    inputRef.current.value = value;
+  }
   useEffect(() => {
     if (!window.google) {
       console.error("Google API is not loaded.");

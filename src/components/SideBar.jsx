@@ -74,7 +74,7 @@ const SideBar = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, setCoo
         <FontAwesomeIcon icon={faCaretDown} className={showRoute ? "caret-icon icon180" : "caret-icon"} />
       </button>
       {
-        showRoute && <Routing setRoute={setRoute} start={start} end={end} setStart={setStart} setEnd={setEnd} coords={coords}/>
+        showRoute && <Routing setRoute={setRoute} start={start} end={end} setStart={setStart} setEnd={setEnd}/>
       }
       <button onClick={() => setShowSettings(!showSettings)} className="toggle-button">
         Settings
