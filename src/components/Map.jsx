@@ -14,7 +14,6 @@ import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader,Marker } from 
 const googleMapsKey = process.env.REACT_APP_GOOGLE_API_KEY;
 const openWeatherMapKey = process.env.REACT_APP_WEATHER_API_KEY;
 const containerStyle = { width: "100%", height: "300px",borderRadius: "15px" };
-const defaultCenter = { lat: 37.7749, lng: -122.4194 }; // San Francisco
 
 const customMarker = new L.Icon({
   iconUrl: markerIconPng,
@@ -166,21 +165,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
         </div>
       )}
 
-{/*       
-      {(start == "") && <div>
-        <div className="popup-overlay">
-          <div className="popup">
-            {(!route.origin && !route.origin) ? <div>
-              <h2>Your start location is empty. Please close the popup, refresh the page and add one</h2>
-              
-            </div>:<div>
-              <h2>Your end location is empty. Please close the popup, refresh the page and add one </h2>
 
-            </div> }
-          </div>
-          <button onClick={() => makeNull()} >Close</button>
-        </div>
-      </div> } */}
 
       {(directions == null && route.origin && route.destination) && <div>
         <div className="popup-overlay">

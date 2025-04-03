@@ -125,7 +125,7 @@ label #text {
 }
 
 
-.buttons,.searchButton,.confirmRoute {
+.buttons,.searchButton,.confirmRoute,.confirmRoutes {
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
     padding: 10px 20px;
@@ -135,7 +135,11 @@ label #text {
     border-radius: 5px;
     cursor: pointer;
   }
-
+.confirmRoutes {
+    position: relative;
+    top:20px;
+    background-color: green;
+}
   .buttonContainer {
     display: flex;
     justify-content: center;
@@ -163,6 +167,19 @@ label #text {
     flex-direction: column;
   }
 
+.confirmations {
+    display: flex;
+    flex-direction: row;
+    position: relative;
+    left: 5px;
+    color: red;
+    font-weight: bold;
+}
+.disclaimers {
+    position: relative;
+    right: 50px;
+    top: 30px;
+}
 .confirmationClass {
 
     display: flex;
@@ -184,6 +201,7 @@ label #text {
     height: 100%;
     position: relative;
     margin-bottom: 5%;
+    font-weight: bold;
   }
   .textHelp {
     width: 100%;
@@ -201,7 +219,7 @@ label #text {
     background: #2C3E50;
     box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
     flex-direction: column;
-    height: 50vh;
+    height: 55vh;
     
     
     margin-bottom: 20px;
@@ -293,8 +311,8 @@ input[type="checkbox"] {
 }
 .currentLocation {
     position: relative;
-    bottom:1vh;
-    margin:0 auto;
+    bottom: 5px;
+    
     height: 100%;
 }
 .currentLocationHelper {
@@ -333,6 +351,7 @@ input[type="checkbox"] {
     position: relative;
     color: #E0E3EB;
     top:2vh;
+    font-weight: bold;
     
 }
 .confirmRoute {
@@ -377,7 +396,20 @@ input[type="checkbox"] {
 }
 
 
-  
+@media (max-width:1075px) {
+    .confirmations {
+        display: flex;
+        flex-direction: column;
+    }
+    .disclaimers {
+        position: relative;
+        top:10px;
+        left: 2px;
+    }
+    .confirmRoutes {
+
+    }
+}  
 
 @media (max-width:500px) {
     .boxContainer {
@@ -404,6 +436,7 @@ input[type="checkbox"] {
         padding: 20px;
         height: 100%;
     }
+    
     
     
     .images {
@@ -445,3 +478,5 @@ input[type="checkbox"] {
     }
     
 }
+
+

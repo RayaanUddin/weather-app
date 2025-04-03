@@ -9,6 +9,7 @@ function Routing({setRoute,start,end,setStart,setEnd,coords}) {
   const [directions, setDirections] = useState(null);
   const [locationName, setLocationName] = useState("");
   const [isDestEmpty,setIsDestEmpty] = useState(false)
+  const [toggleCurrent,setToggleCurrent] = useState(false)
   
  
   const { isLoaded } = useJsApiLoader({
@@ -93,8 +94,14 @@ const convertCoordsToAddress = (lat, lng) => {
 
 
 const clickConvert = () => {
-  convertCoordsToAddress(currentLocation.lat,currentLocation.lng)
-  setEnd(locationName)
+  if (toggleCurrent) {
+    setToggleCurrent(false)
+  }
+  else {
+    convertCoordsToAddress(currentLocation.lat,currentLocation.lng)
+    setToggleCurrent(true)
+  }
+
 }
 
 
@@ -120,9 +127,9 @@ const clickConvert = () => {
               <div className="currentLocation">
                 {start === "" ? <><div>
                     <p className="currentLocationHelper">Your Current Location is being used as a start location.</p>
-                    <p className="currentLocationHelperButton">Press the location button to see where you are currently</p>
+                    <p className="currentLocationHelperButton">Press the location button to see your current location,press again to close</p>
                     
-                    {locationName ? <p className="currentLocation">Current Location: {locationName}</p>  : null}
+                    {toggleCurrent ? <p className="currentLocation">Current Location: {locationName}</p>  : null}
                   </div></>:null}
               </div>
               <div className="mapBox">
@@ -157,9 +164,9 @@ const clickConvert = () => {
           </div>
           <div>
           {
-              isDestEmpty && <div className="confirmation">
-              <p className="disclaimer">Please enter a destination</p>
-              <button className="confirmRoute" onClick={() => setIsDestEmpty(false)}>Close</button>
+              isDestEmpty && <div className="confirmations">
+              <p className="disclaimers">Please enter a destination</p>
+              <button className="confirmRoutes" onClick={() => setIsDestEmpty(false)}>Close</button>
             </div>
             }
           </div>
