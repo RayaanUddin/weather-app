@@ -9,10 +9,17 @@ header {
     background: rgba(255, 255, 255, 0.07);
     align-items: center;
     color: inherit;
+    transition: all 0.3s ease-in-out;
     button {
         padding: 0 5px;
     }
     button:hover {
         background: rgba(255, 255, 255, 0.1);
+    }
+}
+
+@media (max-width: 1000px) {
+    header {
+        background: rgb(113, 113, 113);
     }
 }
