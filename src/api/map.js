@@ -1,6 +1,5 @@
 const weatherLayers = {
   Clouds: "CL",
-  Precipitation: "PA0",
   Temperature: "TA2",
   Wind: "WND",
   Humidity: "HRD0",

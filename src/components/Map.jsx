@@ -1,37 +1,15 @@
 import React, { useState, useEffect } from "react";
-import { MapContainer, TileLayer,  Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import { faCog } from "@fortawesome/free-solid-svg-icons";
-import L from "leaflet";
 import "../api/map.js";
 import "../styles/Map.css";
-import markerIconPng from "leaflet/dist/images/marker-icon.png";
-import markerShadowPng from "leaflet/dist/images/marker-shadow.png";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { getLayerAPI, getWeatherLayers } from "../api/map";
+import { getWeatherLayers } from "../api/map";
 import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader,Marker } from "@react-google-maps/api";
 
-const googleMapsKey = process.env.REACT_APP_GOOGLE_API_KEY;
-const openWeatherMapKey = process.env.REACT_APP_WEATHER_API_KEY;
-const containerStyle = { width: "100%", height: "300px",borderRadius: "15px" };
+const containerStyle = { width: "100%", height: "40vh",borderRadius: "15px" };
 
-const customMarker = new L.Icon({
-  iconUrl: markerIconPng,
-  shadowUrl: markerShadowPng,
-  iconSize: [20, 30], // Default Leaflet size
-  iconAnchor: [12, 41], // Center bottom
-  popupAnchor: [1, -34], // Popup positioning
-});
-const weatherLayers = {
-  Temperature: "temp_new",
-  Wind: "wind_new",
-  Clouds: "clouds_new",
-  Precipitation: "precipitation_new",
-  Pressure: "pressure_new",
-  Humidity: "humidity_new"
-};
-
-const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => {
+const Map = ({ route,setRoute,coords}) => {
   const [selectedLayers, setSelectedLayers] = useState([]);
   const [showSettings, setShowSettings] = useState(false);
   const [showHelp, setShowHelp] = useState(false);
@@ -40,7 +18,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
 
   const [isZero,setIsZero] = useState(false)
   
-  const [centre,setCentre] = useState({lat:coords.lat,lng:coords.lon})
+  const [centre] = useState({lat:coords.lat,lng:coords.lon})
   
   useEffect(() => {
     const hasShownHelp = localStorage.getItem("hasShownHelp");
@@ -51,7 +29,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
   }, []);
 
   const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: googleMapsKey,
+    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY,
   });
 
   const getRoute = (starts,ends) => {
@@ -78,6 +56,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
     );
   };
 
+  // gets the route the user wants in quick succession
   useEffect(() => {
 
     if (!isLoaded) {
@@ -93,6 +72,8 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
     console.log(route)
   },[isLoaded,route])
 
+  // deletes the route if user does not want it displayed by a press of a button
+
   const reset = () => {
     setRoute((prevRoute) => ({
       ...prevRoute, // Keep existing properties
@@ -103,8 +84,16 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
     setDirections(null)
     localStorage.removeItem("route");
   }
+  // toggles the layers the user wants on the map, whether it is wind or temperature, it would display to the user
+  const toggleLayer = (layer) => {
+    setSelectedLayers((prev) =>
+      prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
+    );
+  };
+  
 
 
+  // displays the layers on the map on the user
 
   useEffect(() => {
     if (!mapInstance) return;
@@ -114,25 +103,23 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
 
     // Add all selected weather layers
     selectedLayers.forEach(layer => {
+      
       const weatherLayer = new window.google.maps.ImageMapType({
-        getTileUrl: (coord, zoom) =>
-          `https://tile.openweathermap.org/map/${layer}/${zoom}/${coord.x}/${coord.y}.png?appid=${openWeatherMapKey}`,
-        tileSize: new window.google.maps.Size(256, 256),
+        getTileUrl: (coord, zoom) => {
+          console.log(coord.x)
+          const url = layer === "PA0" ? `https://maps.openweathermap.org/maps/2.0/weather/PA0/20/${coord.x}/${coord.y}?appid=${process.env.REACT_APP_WEATHER_API_KEY}&fill_bound=true&opacity=0.6`:`https://maps.openweathermap.org/maps/2.0/weather/${layer}/20/${coord.x}/${coord.y}?appid=${process.env.REACT_APP_WEATHER_API_KEY}&fill_bound=true&opacity=0.6`
+          console.log(url)
+
+          return url },
+        tileSize: new window.google.maps.Size(300, 300),
         opacity: 0.6,
         name: "Weather",
       });
+
+      console.log(weatherLayer)
       mapInstance.overlayMapTypes.push(weatherLayer);
     });
   }, [selectedLayers, mapInstance]);
-
-  
-  const toggleLayer = (layer) => {
-    setSelectedLayers((prev) =>
-      prev.includes(layer) ? prev.filter((l) => l !== layer) : [...prev, layer]
-    );
-  };
-  
-
   
 
   return (
@@ -152,7 +139,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
         <div className="settings-panel">
           <h3>Weather Layers</h3>
         
-          {Object.entries(weatherLayers).map(([name, value]) => (
+          {Object.entries(getWeatherLayers()).map(([name, value]) => (
           <div key={value}>
             <label key={value}>
               <input
@@ -174,9 +161,9 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
           X
         </div>
       }
+      
 
-
-      {(isZero && route.origin && route.destination && directions !== null) && <div>
+      {(isZero && route.origin && route.destination && directions?.status !== "OK") && <div>
         <div className="popup-overlay">
           <div className="popup">
           <h2>This route is not available, please refresh and try a route that is more viable  </h2>
@@ -194,6 +181,7 @@ const Map = ({ lats, lons,route,setRoute,coords,start,end,setStart,setEnd }) => 
           options={{
             mapTypeControl: false,
             fullscreenControl:false,
+            streetViewControl: false
           }}
         >
           {directions && <DirectionsRenderer directions={directions} />}

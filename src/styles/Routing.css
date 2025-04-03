@@ -1,27 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap');
 
-.filters label {
-    color: white;
-    font-family: 'Inter', sans-serif;
-    font-size: 24px;
-    font-style: normal;
-    font-weight: 400;
-    line-height: normal;
-    display: flex;
-    position: relative;
-    bottom: 2px;
-    
-}
-.filters {
-    display: flex;
-    flex-direction: column;
- 
-    position: relative;
-    top:30px;
-    margin: 0 auto;
-    
-}
+
 .maps {
+    width: 100%;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -32,11 +13,18 @@
     border: 1px solid #555;
     transition: background 0.3s ease-in-out;
 }
+
+/* Button container css to center and be responsive*/
 .buttonContainer {
     width: 100%;
     margin: 0 auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 15vh; 
     
 }
+/* css to center and be responsive */
 .searchButton {
     width: 100%;
     
@@ -49,35 +37,7 @@
 
 }
 
-body {
-    background: linear-gradient(140deg, #7F9EB9 16.57%, #A8A592 52.41%, #C5A575 81.76%);
-    display: flex;
-}
-label {
-    display: flex;
-    width: 201px;
-    height: 35px;
-    flex-shrink: 0;
-    
-}
-
-label p {
-    height: 100px;
-}
-
-label  {
-    font-size: 10px;
-    display: flex;
-}
-label #text {
-    margin-bottom: 10px;
-}
-.maps {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
- 
-}
+/* CSS for inputs for the routing */
 
 .maps input {
   
@@ -102,7 +62,7 @@ label #text {
 .maps input::placeholder {
     color: inherit
 }
-
+/* gives the gap between start and end location input boxes */
 .maps input:first-child {
     margin-bottom: 15px;
 }
@@ -118,13 +78,9 @@ label #text {
 }
 
 
-.stuff {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-}
 
 
+/* CSS for all the button for consistency */
 .buttons,.searchButton,.confirmRoute,.confirmRoutes {
     font-family: 'Inter', sans-serif;
     font-size: 1rem;
@@ -140,18 +96,12 @@ label #text {
     top:20px;
     background-color: green;
 }
-  .buttonContainer {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    height: 15vh; /* Full viewport height */
-  }
-  
   
   button:hover {
     background-color: #0056b3;
   }
-  
+
+  /* For the top part of changing the route centred to tell the user how they should form their inputs  */
   .info {
     display: flex;
     justify-content: center; /* Center horizontally */
@@ -167,11 +117,13 @@ label #text {
     flex-direction: column;
   }
 
+
+/* Displays the error message for when inputting without destination filled */
 .confirmations {
     display: flex;
     flex-direction: row;
     position: relative;
-    left: 9px;
+    left: 6px;
     color: red;
     font-weight: bold;
 }
@@ -180,6 +132,13 @@ label #text {
     right: 50px;
     top: 30px;
 }
+
+/* Displays the current location in centre */
+.currentLocation div {
+    margin-top:20px ;
+}
+
+/* This is the css for the confirmation for the shaded route */
 .confirmationClass {
 
     display: flex;
@@ -196,6 +155,7 @@ label #text {
     flex-direction: column;
 
 }
+/* for displaying the helper on top of the input section*/
   .searchHelper {
     width: 100%;
     height: 100%;
@@ -207,6 +167,7 @@ label #text {
     width: 100%;
     height: 100%;
   }
+/* the main box container for the routing  */
   .boxContainer {
     display: flex;
     justify-content: center; /* Center horizontally */
@@ -219,7 +180,7 @@ label #text {
     background: #2C3E50;
     box-shadow: 0px 4px 24px -1px rgba(0, 0, 0, 0.25);
     flex-direction: column;
-    height: 55vh;
+    
     
     
     margin-bottom: 20px;
@@ -250,6 +211,8 @@ label #text {
     
 }
 
+
+
 .mapGoogle {
     width: 100%;
     height: 23rem;
@@ -261,8 +224,8 @@ label #text {
 input[type="checkbox"] {
     
     margin-bottom: 10px;
-    border-radius: 50%;        /* Make it circular */
-    border: 2px solid white;/* Border color */
+    border-radius: 50%;        
+    border: 2px solid white;
     margin-right:12px ;
 
 }
@@ -358,10 +321,10 @@ input[type="checkbox"] {
     position: relative;
     
     height: 5vh;
-    top: 3vh;
-    right: 2vw;
-    display: flex;
-    justify-content: center;
+    margin: 0 auto;
+    top:40%;
+    right: 4%;
+    
     background: linear-gradient(135deg, #4E89AE, #5DADE2);
 }
 

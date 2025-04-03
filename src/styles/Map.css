@@ -1,11 +1,11 @@
 .map-container {
     position: relative;
 }
-
+/* settings button, makes sure it is on top right and aligns with the logo below  */
 .settings-button {
     position: absolute;
-    top: 20px;
-    right: 20px;
+    top: 5px;
+    right: 13px;
     z-index: 1000;
     background: white;
     border: none;
@@ -46,13 +46,18 @@
 .settings-panel label {
     display: flex;
     align-items: center;
+    flex-direction: row;
     font-size: 14px;
-    margin: 5px 0;
+    margin: 2px 0;
     cursor: pointer;
+    height: 10%;
+    width: 20%;
 }
 
 .settings-panel input {
     margin-right: 5px;
+    position: relative;
+    top:5px;
 }
 .buttons {
     font-family: 'Inter', sans-serif;
@@ -64,6 +69,7 @@
     border-radius: 5px;
     cursor: pointer;
   }
+/* gives overlay for errors */
   .popup-overlay {
     position: absolute;
     top: 20%;
@@ -75,6 +81,8 @@
     justify-content: center;
     z-index: 1000;
   }
+
+/* the main popup for the errors */
 .popup {
     background: #2C3E50;
     padding: 20px;
@@ -89,6 +97,8 @@
 .popup h2 {
     color:white;
 }
+
+/* the button for closing the route */
 .closeRoute {
     position: absolute;
     display: flex;

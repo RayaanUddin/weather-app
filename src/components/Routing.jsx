@@ -1,8 +1,6 @@
 import React, { useState, useEffect } from "react";
-import { GoogleMap, LoadScript, DirectionsRenderer,useJsApiLoader } from "@react-google-maps/api";
 import "../styles/Routing.css";
 import locationIcon from "../assets/location-icons/location_on.png";
-const defaultCenter = { lat: 37.7749, lng: -122.4194 }; 
 
 function Routing({setRoute,start,end,setStart,setEnd,coords}) {
   const [currentLocation, setCurrentLocation] = useState(null);
@@ -10,19 +8,9 @@ function Routing({setRoute,start,end,setStart,setEnd,coords}) {
   const [locationName, setLocationName] = useState("");
   const [isDestEmpty,setIsDestEmpty] = useState(false)
   const [toggleCurrent,setToggleCurrent] = useState(false)
-  
- 
-  const { isLoaded } = useJsApiLoader({
-    googleMapsApiKey: process.env.REACT_APP_GOOGLE_API_KEY, // Replace with your API key
-  });
-  const isDisabled = !end.trim();
 
-  const [weatherConditions, setWeatherConditions] = useState({
-    rain: false,
-    wind: false,
-    temperature: false,
-});
 
+// Gets the current location of the user
 useEffect(() => {
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition(
@@ -41,27 +29,7 @@ useEffect(() => {
   }
 }, []);
 
-
-const [mapSize, setMapSize] = useState({
-  width: window.innerWidth < 500 ? "80vw" : "72vw",
-  height: window.innerWidth < 500 ? "450px" : "60vh",
-  marginRight:window.innerWidth < 500 ? "3vw":"120px"
-});
-
-useEffect(() => {
-  const handleResize = () => {
-    setMapSize({
-      width: window.innerWidth < 500 ? "90vw" : "80vw",
-      height: window.innerWidth < 500 ? "450px" : "50vh",
-      marginRight:window.innerWidth < 500 ? "3vw":"200px"
-    });
-  };
-
-  window.addEventListener("resize", handleResize);
-  return () => window.removeEventListener("resize", handleResize);
-}, []);
-
-
+// sets the routes when searching for a route
 const setRoutes = () => {
   if (end === "") {
     setIsDestEmpty(true)
@@ -76,6 +44,8 @@ const setRoutes = () => {
   localStorage.setItem("route", JSON.stringify(routeJSON));
 
 }
+
+// converts coords to address to display the current location of user
 const convertCoordsToAddress = (lat, lng) => {
   if (!window.google) return;
 
@@ -92,7 +62,7 @@ const convertCoordsToAddress = (lat, lng) => {
 };
 
 
-
+// toggle function for it to give the user a choice
 const clickConvert = () => {
   if (toggleCurrent) {
     setToggleCurrent(false)
@@ -103,7 +73,6 @@ const clickConvert = () => {
   }
 
 }
-
 
   return (
     <div>
