@@ -53,7 +53,7 @@ const Settings = ({ selectedMetricsToDisplay, setSelectedMetricsToDisplay, unit,
         </form>
       </div>
       <div className="change-metrics">
-        <h4>Change Metrics</h4>
+        <h4>Change Units</h4>
         {Object.values(unitConversion.UnitType).map((unitType) => (
           <React.Fragment key={unitType}>
             <input type="radio" id={unitType} name="choice" onChange={() => setUnit(unitType)} value={unitType} checked={unit === unitType} />
