@@ -34,6 +34,8 @@ const LocationSearch = ({ setCoords, toggleMenu, unit, forecasts, searchHistory,
       } else {
         handleError("Could not retrieve location.");
       }
+    } else {
+      handleError("Please select a location.");
     }
   };
 
