@@ -24,6 +24,7 @@ const Map = ({ route,setRoute,coords}) => {
   const [mapInstance, setMapInstance] = useState(null);
   const [directions, setDirections] = useState(null);
   const [centre] = useState({lat:coords.lat,lng:coords.lon});
+  const [mapError, setMapError] = useState(false);
   
   useEffect(() => {
     const hasShownHelp = localStorage.getItem("hasShownHelp");
@@ -53,6 +54,7 @@ const Map = ({ route,setRoute,coords}) => {
           setDirections(result);
         } else {
           console.error("Directions request failed:", status);
+          setMapError(true);
         }
       }
     );
@@ -163,7 +165,7 @@ const Map = ({ route,setRoute,coords}) => {
             {directions && <DirectionsRenderer directions={directions} />}
             <Marker position={centre}></Marker>
           </GoogleMap>
-          {(route.origin && route.destination && directions?.status !== "OK") &&
+          {(mapError && route.origin && route.destination && directions?.status !== "OK") &&
             (
               <Modal show={true} onClose={() => reset()} title="Warning">
                 <p>This route is not available. Try a different route.</p>
