@@ -18,6 +18,45 @@ This React application fetches weather forecasts and displays weather conditions
 - Clearing data with confirmation
 - Visual night and day difference
 
+
+Here's a section you can include in your README file to guide users on how to set up the required environment variables for local production or deployment:
+
+---
+
+## Environment Variables Setup
+
+To run the application, you need to configure the following environment variables:
+
+- `REACT_APP_WEATHER_API_KEY`: Your API key for accessing the Weather API.
+- `REACT_APP_GOOGLE_API_KEY`: Your API key for Google services.
+
+### Local Development
+
+1. Create a file named `.env` in the root directory of the project.
+2. Add the following lines to the `.env` file:
+
+   ```plaintext
+   REACT_APP_WEATHER_API_KEY=your_weather_api_key_here
+   REACT_APP_GOOGLE_API_KEY=your_google_api_key_here
+   ```
+
+3. Replace `your_weather_api_key_here` and `your_google_api_key_here` with your actual API keys.
+4. Save the file. The app will automatically load these variables during development.
+
+### Deployment on Vercel
+
+If you're deploying this application on Vercel, you can set the environment variables directly in the Vercel dashboard:
+
+1. Go to your project in the [Vercel Dashboard](https://vercel.com/dashboard).
+2. Navigate to the **Settings** tab.
+3. Scroll down to the **Environment Variables** section.
+4. Add the following variables one by one:
+   - Key: `REACT_APP_WEATHER_API_KEY`
+     - Value: Your Weather API key.
+   - Key: `REACT_APP_GOOGLE_API_KEY`
+     - Value: Your Google API key.
+5. Save the changes and redeploy your application.
+
 ---
 
 ## Installation
